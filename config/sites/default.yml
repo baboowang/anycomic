@@ -1,4 +1,5 @@
 - name : 笨狗 
+  version : 20120613
   domain : bengou.com
   search : 
     rule : 'http://www.bengou.com/Result?searchstr={keyword}&searchtype=name'
@@ -33,6 +34,7 @@
     img : '#disp'
 
 - name : 爱漫画
+  version : 20120613
   domain : imanhua.com
   book :
     name : 'h1'

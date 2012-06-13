@@ -76,6 +76,7 @@
         &nbsp;&nbsp;|&nbsp;&nbsp;
         <a id="new-page-link" href="<: $c.url_for('/period').query(url => $period.url, start => $end + 1) :>">在新的页面观看</a>
     </p>
+    : }
     <script>
     var img_config = {
         base_url : '<: $c.url_for('/page').query(url => $period.url) :>',
@@ -84,7 +85,6 @@
         batch : '<: $batch_count :>',
     };
     </script>
-    : }
     <p id="period-guide" style="margin-top:0">
         : if $prev_period {
         <a href="<: period_url($prev_period) :>" accessKey="P" title="快捷键 P">
