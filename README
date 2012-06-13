@@ -1,0 +1,30 @@
+依赖环境：
+1. Perl5.10 版本以上
+2. 部分特性需要安装v8引擎
+
+安装：
+1. 创建数库库
+    进入database目录，执行 sqlite3 anycomic.db < anycomic.sql
+
+2. 安装依赖的Perl模块
+    autodie
+    Cwd
+    DBIx::Class
+    Digest::MD5
+    File::Path
+    File::stat
+    File::Spec::Functions
+    File::Basename
+    JSON
+    JavaScript::V8
+    List::Util
+    Mojolicious
+    Mojolicious::Plugin::XslateRenderer
+    Modern::Perl
+    Scalar::Util
+    YAML
+
+使用：
+1, 进入Anycomic安装目录，执行命令 morbo app.pl，启动服务
+
+2, 使用浏览器打开 http://127.0.0.1:3000
