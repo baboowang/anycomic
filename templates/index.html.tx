@@ -1,0 +1,105 @@
+: cascade layout::default with common
+: around content -> {
+<div id="left">
+    <ul id="tabs">
+        <li<: $kw ? '' : ' class="active"' :>><a href="/" accesskey="M" title="我的书架(M)"><i class="icon i-home1"></i>我的书架</a></li>
+        : if $kw {
+        <li class="active"><a><i class="icon i-search"></i>搜索结果</a><a class="right mr10 close" href="/" title="关闭">x</a></li>
+        : }
+    </ul>
+    <div id="shelfs">
+    <div id="shelf-loading" style="display:none"><img src="/img/loading.gif"/></div>
+    : include component::shelf;
+    : if $books.size() == 0 && ! $kw {
+    <div id="no-books">
+        <strong>你的书架中还没有存放任何的漫画，您可以通过以下方式将喜爱的漫画添加进来：</strong>
+        <ul>
+            <li>点击此处快速添加一个漫画</li>
+        </ul>
+        <p class="help">操作提示：点击漫画左上角的"＋"或"－"号，可以将漫画添加进书架或移除出书架。</p>
+    </div>
+    : } else if $books.size() == 0 && $kw {
+    <div id="no-books">
+        <strong>对不起，没有找到相关漫画。你可以尝试：</strong>
+        <ul>
+            <li>
+                检查关键词是否有误或者?
+            </li>
+            <li>
+                减少搜索的关键字长度，来匹配更多搜索结果；
+            </li>
+            <li style="background:none">
+                例如：搜索 火影， 忍者， 火， 影， 忍， 者， 等单个字都可以搜索到“火影忍者”漫画。
+            </li>
+        </ul>
+    </div>
+    : }
+    </div>
+    <form id="search" action="/" method="get">
+        <div id="suggest-cnt">
+            <input type="text" autocomplete="off" onblur="this.className=''" onfocus="this.className='focus';if(this.value=='输入漫画名称')this.value='';" maxlength="20" name="kw" value="<: $kw || '输入漫画名称' :>"/>
+            <div class="suggest-items" style="display:none"></div>
+        </div>
+        <button type="submit">&nbsp;</button>
+    </form>
+  
+    <div style="position:relative">
+        <p class="help">
+            快捷键:
+            <span><strong>N</strong>: 下一页</span>|
+            <span><strong>P</strong>: 上一页</span>|
+            <span><strong>S</strong>: 搜索</span>|
+            <span><strong>M</strong>: 我的书架</span>|
+        </p>
+        <form method="post" action="/shelf/setting" style="display:inline;position:absolute;right:0;top:2px;">
+            <strong>书架大小：</strong>
+            <select name="x">
+                : for [4..7] -> $size {
+                <option value="<: $size :>"<: $shelf_x_size == $size ? ' selected="selected"' : '' :>><: $size :></option>
+                : }
+            </select>
+            <b style="margin:0 2px">X</b>
+            <select name="y">
+                : for [2..5] -> $size {
+                <option value="<: $size :>"<: $shelf_y_size == $size ? ' selected="selected"' : '' :>><: $size :></option>
+                : }
+            </select>
+            <input type="submit" value="设 置" style="background:#1987AB;color:#fff;font-weight:bold;border-color:#fff"/>
+        </form>
+    </div>
+</div>
+
+<div id="right">
+: if $read_logs.size() {
+<dl class="right-box" id="his">
+    <dt><a href="#" id="clear-his" class="right">清除</a>我的阅读记录</dt>
+    <dd>
+        <ul>
+        : for $read_logs -> $period {
+        <li>
+            <a href="<: period_url($period) :>" class="right period" target="_blank">
+                <: $period.name :>
+            </a>
+            <a href="<: book_url($period.book) :>" target="_blank">
+                <: $period.book.name :>
+            </a>
+        </li>
+        : }
+        </ul>
+    </dd>
+</dl>
+: }
+</div>
+<!--<a href="/shortcut" id="shortcut" title='点击右键，选择"链接另存为..."，将快捷方式保存至桌面即可'>将有本漫画网保存到桌面</a>-->
+
+<script src="/js/jquery.suggest.js"></script>
+<script>
+$(function(){
+    $('#clear-his').click(function(event){
+        event.preventDefault();
+        $('#his').hide();
+        setCookie('track', '', -1);
+    });
+});
+</script>
+: }

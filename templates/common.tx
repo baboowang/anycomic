@@ -1,0 +1,27 @@
+: macro book_url -> $book {
+: $c.url_for('/book').query({url => $book.url}) | mark_raw
+: }
+
+: macro book_link -> $book, $link_name {
+: $c.link_to($link_name || $book.name, $c.url_for('/book').query({url => $book.url})) | mark_raw
+: }
+
+: macro book -> $book {
+: book_link($book, $book.name)
+: }
+
+: macro period_url -> $period {
+: $c.url_for('/period').query({url => $period.url}) | mark_raw
+: }
+
+: macro period_link -> $period, $link_name {
+: $c.link_to($link_name || $period.name, $c.url_for('/period').query({url => $period.url})) | mark_raw
+: }
+
+: macro period -> $period {
+: period_link($period, $period.name) 
+: }
+
+: macro book_cover -> $book {
+: $c.image($book.cover ? $c.url_for('/cover').query({url => $book.url}) : '/img/default.jpg', alt => $book.name) | mark_raw
+: }

@@ -1,0 +1,52 @@
+: cascade with common
+<div class="shelf">
+    : for $books -> $book {
+        : if $~book % $shelf_x_size == 0 {
+    <div class="floor">
+        <div class="floor-right">
+            <ul class="floor-left">
+        : }
+                <li class="book <: $~book % $shelf_x_size == ($shelf_x_size - 1) || $~book.is_last ? 'last' : '' :>">
+                    <a href="<: book_url($book) :>" target="_blank">
+                        <: book_cover($book) :>
+                    </a>
+                    <span>
+                        <strong>
+                            <?php $has_period_link = ! $book['is_end'] && $book['last_update_pid']; ?>
+                            <a href="<: book_url($book) :>" target="_blank" accessKey="<: $~book.count :>">
+                                <: $book.name :>
+                            </a>
+                            : if $book.latest_period {
+                            <a href="<: period_url($book.latest_period) :>" class="period" target="_blank">
+                                <: $book.latest_period.name :>
+                            </a>
+                            : }
+                        </strong>
+                        <i></i>
+                    </span>
+                    <a href="#" onclick="remove_from_shelf('<: $book.id :>', this, event)" title="从书架移除" class="remove"><i>移除</i><b></b></a>
+                </li>
+        : if $~book % $shelf_x_size == ($shelf_x_size - 1) || $~book.is_last {
+            </ul>
+        </div>
+    </div>
+        : }
+    : }
+
+    : if $total_pages > 1 { 
+        : if $page > 1 {
+    <a class="prev_page" href="/?page=<: $page - 1 :><: $kw ? '&kw=' ~ uri_escape($kw) : '' :>" accesskey="P" accessEvent="click" title="查看上一页(P)">上一页</a>
+        : } else {
+    <span class="prev_page no_prev_page" title="第一页">上一页</span>
+        : } 
+    <span class="page"><i title="第<: $page :>页"><: $page :></i><b></b></span>
+    
+        : if $page < $total_pages {
+    <a class="next_page" href="/?page=<: $page + 1 :><: $kw ? '&kw=' ~ uri_escape($kw) : '' :>" accessKey="N" accessEvent="click" title="查看下一页(N)">下一页</a>
+        : } else {
+    <span class="next_page no_next_page" title="最后一页">下一页</span>
+        : }
+    
+    <div class="pages-wrapper"><div class="pages" style="display:none"><: $pagination :></div></div>
+    : }
+</div>

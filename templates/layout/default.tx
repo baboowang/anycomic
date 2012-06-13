@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<title><: $title ? $title ~ '-' : '' :>有本漫画</title> 
+<link type="text/css" rel="stylesheet" href="/css/main.css?v=35" />
+<link type="text/css" rel="stylesheet" href="/css/base/jquery-ui.css" />
+: if $custom_css {
+<style><: $custom_css :></style>
+: }
+<script type="text/javascript" src="/js/jquery.min.js"></script> 
+<script type="text/javascript" src="/js/jquery-ui-1.8.16.custom.min.js"></script> 
+</head> 
+<body id="<: $page_id // 'index' :>">
+    <b id="top-line">有本漫画</b>
+    <div id="wrapper">
+        <div id="header">
+            <h1 id="logo"><a href="/" title="有本漫画">有本漫画</a></h1>
+            <ul id="top-nav">
+                <li><a href="/"<: $cur_nav == 'home' ? ' class="sel"' : '' :>><i class="icon i-home"></i>首页</a></li>
+                <li><a href="#" id="add_comic_link" style="color:red" accessKey='A' accessEvent='click' title="添加漫画(A)"><i class="icon i-di"></i>快速添加漫画</a></li>
+                <li><a href="http://t.ybmanhua.com/" class="out"><i class="icon i-talk"></i>有讨论</a></li>
+            </ul>
+        </div>
+        <div id="body">
+            : block content -> {}
+            <div class="clear"></div>
+        </div>
+        <div id="footer">
+            <p>
+                <a href="#header" class="right" style="color:#666"><i class="icon i-up"></i>返回页顶</a>
+                <a href="/">首页</a><i>|</i>
+                <a href="http://t.ybmanhua.com/" style="color:green" title="有本漫画讨论区">讨论区</a><i>|</i>
+                <a href="/mine/">我的书架</a><i>|</i>
+            </p>
+        </div>
+        <script src="/js/yb.js?v=18"></script>
+    </div>
+
+    <div id="dialog-add-comic" style="display:none;padding:20px">
+        <form id="add-book-form" action="/add_book" method="get">
+            <label for="name" style="font-weight:bold;font-size:14px;">漫画地址：</label>
+            <input type="text" name="url" class="text ui-widget-content ui-corner-all" style="width:400px;height:25px"/>
+            <p class="err-msg" style="color:red"></p>
+        </form>
+    </div>
+
+    </body>
+    <script>
+    $(function(){
+        $('#dialog-add-comic').dialog({
+            autoOpen : false,
+            width : 500,
+            height : 200,
+            modal : true,
+            title : '快速添加漫画',
+            buttons : {
+                "添加漫画" : function() {
+                    var $f = $('#add-book-form'), $url = $f.find('input[name=url]');
+                    
+                    if ($.trim($url.val()) == '') {
+                        $f.find('.err-msg').html('请填写地址。');
+                        return;
+                    }
+
+                    if (! /^http/i.test($url.val())) {
+                        $f.find('.err-msg').html('地址必须是以http开头的合法链接。'); 
+                        return;
+                    }
+
+                    $f[0].submit();
+                },
+                "取消" : function() {
+                    $(this).dialog('close');
+                }
+            }
+        });
+        $('#add_comic_link').click(function(event){
+            event.preventDefault();
+        
+            $('#dialog-add-comic').dialog('open');      
+        });
+    });
+    </script>
+</html><!--{elapsed_time}-->

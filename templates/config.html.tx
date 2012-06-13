@@ -1,0 +1,36 @@
+: cascade layout::default with common { title => '配置' }
+: around content -> {
+<p>
+<input type="button" value="重载配置" cmd="reload_config"/>
+</p>
+<ul id="ajax_info">
+</ul>
+<script>
+$(function(){
+    var $info = $('#ajax_info'), 
+        info = function(msg) { $info.append('<li>' + msg + '</li>'); }
+        ;
+
+    $('input[cmd]').click(function(event){
+        var $t = $(this), 
+            cmd_name = $(this).attr('cmd_name') || $(this).val();
+
+        $t.prop('disabled', true);
+        info(cmd_name + '，处理中，请稍候...');
+        $.get('/' + $t.attr('cmd') + '.json', function(ret) {
+            $t.prop('disabled', false);
+            if (ret) {
+                if (ret.code == 0)  {
+                    info('<span style="color:green">' + cmd_name + '成功</span>');
+                } else {
+                    info('<span style="color:red">' + cmd_name + '失败 ' 
+                        + (ret.msg || '') + '</span>');
+                }
+            } else {
+                info('<span style="color:red">服务器错误</span>');
+            }
+        }, 'json');
+    });
+});
+</script>
+: }

@@ -1,0 +1,108 @@
+: cascade layout::default with common { page_id => 'period', title => $period.book.name ~ ' ' ~ $period.name }
+: around content -> {
+<h1 id="nav">
+    <a href="/" title="返回首页">有本漫画</a>&nbsp;&gt;&nbsp;<: book($period.book) :>&nbsp;&gt;&nbsp;<: $period.name :>
+    &nbsp;&nbsp;&nbsp;
+    <label style="font-size:12px;font-weight:normal;background:green;color:white;padding:3px" target="_blank">图片保存目录：
+        <: $period.data_dir :>
+    </label>
+</h1>
+<p class="help">
+    快捷键：
+    <span><strong>F11</strong>:全屏切换</span>
+    |
+    <span><strong>f</strong>:图片大小自适应</span>
+    |
+    <span><strong>b</strong>:至页面底部</span>
+    |
+    <span><strong>t</strong>:至页面顶部</span>
+    |
+    <span><strong>空格</strong>:翻屏</span>
+    |
+    <span><strong>c</strong>:显示更多</span>
+    |
+    <span><strong>n</strong>:下一话</span>
+    |
+    <span><strong>p</strong>:上一话</span>
+    |
+    <span><strong>h</strong>:返回主目录</span>
+    
+    <span>
+    <strong>每次显示
+    <select onchange="window.location='<: period_url($period) :>&batch=' + this.options[this.selectedIndex].value">
+    : for [1,5,10,20] -> $i {
+    <option value="<: $i :>"<: $batch_count == $i ? ' selected="selected"' : '' :>><: $i :>张</option>
+    : }
+    </select>
+    </strong>
+    </span>
+</p>
+<div id="left">
+    <script>
+    var loaded_imgs = {};
+    function fw(img){
+        $(img).parent().find('.rl').remove();
+        loaded_imgs[$(img).parent().find('i:first').text()] = 1;
+    }
+    function er(img) {
+        if (/img\./.test(img.src)) {
+            rl(img);
+        } else {
+            $(img).parent().find('.rl').remove().end().append('<a href="javascript:void(0)" class="rl" onclick="rl(this)">重新加载该图片</a>');
+        }
+    }
+    function rl(elem) {
+        var $img = $(elem).parent().find('img');
+        var src = $img[0].src.replace(/&?r=\d+/, '').replace(/\?$/, '');
+        src = (/\?/.test(src) ? '&' : '?') + 'r=' + (+ new Date);
+        $img[0].src = src;
+        if (elem.tagName != 'IMG') {
+            $(elem).remove();    
+        }
+    }
+    setTimeout(function(){$('#loading-info').hide('slow')}, 10000);
+    </script>
+    <div id="book-imgs">
+    : for [$start..$end] -> $i {
+    <div class="img" id="i-<: $i :>">
+    <i><: $i :></i>
+    <img src="/img/default.jpg" id="img-<: $i :>" _src="<: $c.url_for('/page').query(url => $period.url, i => $i) :>" onload="fw(this)" onerror="er(this)" onabort="er(this)"/>
+    </div>
+    : }
+    : if $total > $end { 
+    <p id="nexts">
+        <a href="#nexts" title="快捷键 C" accesskey="C" accessEvent="click">
+        点击显示<i class="range"><: $next_start :>-<: $next_end :></i>页/共<: $total :>页</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a id="new-page-link" href="<: $c.url_for('/period').query(url => $period.url, start => $end + 1) :>">在新的页面观看</a>
+    </p>
+    <script>
+    var img_config = {
+        base_url : '<: $c.url_for('/page').query(url => $period.url) :>',
+        start : '<: $end + 1 :>',
+        total : '<: $total :>',
+        batch : '<: $batch_count :>',
+    };
+    </script>
+    : }
+    <p id="period-guide" style="margin-top:0">
+        : if $prev_period {
+        <a href="<: period_url($prev_period) :>" accessKey="P" title="快捷键 P">
+        «<: $prev_period.name :>
+        </a>
+        &nbsp;|&nbsp;
+        : }
+        <a href="<: book_url($book) :>" accesskey="H" title="快捷键 H">返回<: $book.name :>目录</a>
+        : if $next_period {
+        &nbsp;|&nbsp;
+        <a href="<: period_url($next_period) :>" accessKey="N" title="快捷键 N">
+        <: $next_period.name :>»
+        </a>
+        : }
+    </p>
+    </div>
+</div>
+<div id="loading-info" style="position:absolute;right:0;top:0;line-height:30px;font-weight:bold;font-size:13px;background:green;color:#fff;padding:0 10px;">由于加载的图片较多，有时加载会较慢，请耐心等候...</div>
+<div class="clear"></div>
+: }
+
