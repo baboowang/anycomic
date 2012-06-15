@@ -5,7 +5,7 @@ use AnyComic::Site;
 use Carp qw/carp croak/;
 use Scalar::Util 'weaken';
 use File::Spec::Functions 'catdir';
-use YAML 'LoadFile';
+use YAML::XS 'LoadFile';
 use utf8;
 
 has [qw/sites _domain_map/];

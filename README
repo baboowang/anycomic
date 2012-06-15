@@ -16,13 +16,12 @@
     File::Spec::Functions
     File::Basename
     JSON
-    JavaScript::V8
     List::Util
     Mojolicious
-    Mojolicious::Plugin::XslateRenderer
+    MojoX::Renderer::Xslate
     Modern::Perl
     Scalar::Util
-    YAML
+    YAML::XS
 
 使用：
 1, 进入Anycomic安装目录，执行命令 morbo app.pl，启动服务
