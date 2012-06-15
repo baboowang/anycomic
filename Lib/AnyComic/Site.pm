@@ -8,7 +8,7 @@ use AnyComic::Book;
 use AnyComic::Schema;
 use utf8;
 
-has [qw/app name domain config books _books_map/];
+has [qw/app name domain config books _books_map _period_book_map/];
 
 has id => sub { shift->domain };
 
@@ -49,26 +49,30 @@ sub add_book {
 
     if ($self->is_period_url($url)) {
         unless ($self->config->{period}{book}) {
-            $self->log->warn(qq{$site_name : 未配置Period URL转换Book URL的规则});
-            return;
-        }
-
-        unless (ref $self->config->{period}{book} eq 'CODE') {
-            my $sub = eval 'sub { my $_ = shift; ' . $self->config->{period}{book} . '; $_}'; 
-            if ($@) {
-                $self->log->error(qq{$site_name Period URL转换Book URL语法错误：$@});
+            $period_url = $url;
+            unless ($book_url = $self->try_get_book_url($url)) {
+                $self->log->warn(qq{$site_name : 未配置Period URL转换Book URL的规则});
                 return;
             }
+        } else {
 
-            $self->config->{period}{book} = $sub;
-        }
+            unless (ref $self->config->{period}{book} eq 'CODE') {
+                my $sub = eval 'sub { my $_ = shift; ' . $self->config->{period}{book} . '; $_}'; 
+                if ($@) {
+                    $self->log->error(qq{$site_name Period URL转换Book URL语法错误：$@});
+                    return;
+                }
 
-        $period_url = $url;
-        $book_url = $self->config->{period}{book}->($period_url);
+                $self->config->{period}{book} = $sub;
+            }
 
-        unless ($book_url) {
-            $self->log->error(qq{$site_name Period URL转换Book URL返回值错误});
-            return;
+            $period_url = $url;
+            $book_url = $self->config->{period}{book}->($period_url);
+
+            unless ($book_url) {
+                $self->log->error(qq{$site_name Period URL转换Book URL返回值错误});
+                return;
+            }
         }
     }
 
@@ -195,6 +199,26 @@ sub search {
     }
 
     return $result;
+}
+
+sub try_get_book_url {
+    my ($self, $period_url) = @_;
+
+    $self->{_period_book_map} //= {};
+
+    my $period_id = $self->_get_url_key($period_url);
+
+    return $self->{_period_book_map}{$period_id}
+        if exists $self->{_period_book_map}{$period_id};
+
+    for my $book (@{$self->{books} || []}) {
+        for my $period (@{$book->{periods} || []}) {
+            if ($period_id eq $period->id) {
+                $self->{_period_book_map}{$period_id} = $book->url;
+                return $book->url;
+            }
+        }
+    }
 }
 
 sub _on_save {

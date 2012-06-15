@@ -229,6 +229,11 @@ sub _filter {
                     }
 
                     my $elems = $_->find($filter_value);
+                    
+                    unless ($elems && $elems->size) {
+                        $$err = qq{selector未筛选到结果：$filter_value};
+                        return;
+                    }
 
                     if ($index_filter >= 0) {
                         if ($elems->size > $index_filter) {
@@ -243,6 +248,7 @@ sub _filter {
             }
             when ('regexp') {
                 for my $_ (@res) {
+                    $_ = decode("UTF-8", "$_") if ref $_ eq 'Mojo::DOM';
                     my @ma = "$_" =~ m/$filter_value/xsmig; 
                     unless (@ma) {
                         $$err = qq{正则未匹配：$filter_value. \n 内容：$_};
@@ -318,13 +324,16 @@ sub _get_url_key {
 sub _get_url_info {
     my (undef, $url, $rule) = @_;
 
-    return unless $rule and $url ~~ /$rule/i and keys %+;
+    my $info = {
+        url => $url, 
+    };
 
-    my $info = {};
+    return $info unless $rule and $url ~~ /$rule/i and keys %+;
+
     for my $key (keys %+) {
         $info->{$key} = $+{$key};
     }
-
+    
     return $info;
 }
 

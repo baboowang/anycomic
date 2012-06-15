@@ -113,23 +113,6 @@ sub parse {
     }
 
     my @periods = ();
-    if ($config->{book}{period_name} and ref $config->{book}{period_name} ne 'CODE') {
-        $config->{book}{period_name} = eval 'sub { my $_ = shift; ' . $config->{book}{period_name} . '}';
-        if ($@) {
-            $self->log->error(qq{Period名称获取配置错误：$url_name. $@});
-            return;
-        }
-    }
-    
-    if ($config->{book}{period_url} and ref $config->{book}{period_url} ne 'CODE') {
-        $config->{book}{period_url} = eval 'sub { my $_ = shift; ' . $config->{book}{period_url} . '}';
-        if ($@) {
-            $self->log->error(qq{Period链接获取配置错误：$url_name. $@});
-            return;
-        }
-
-    }
-    
     $self->{_periods_map} = {};
 
     my $period_no = scalar @res;
@@ -137,13 +120,19 @@ sub parse {
         my ($period_name, $period_url);
 
         if ($config->{book}{period_name}) {
-            $period_name = $config->{book}{period_name}->($item);
+            $period_name = $self->_filter($item, $config->{book}{period_name}, $err);
+            if ($err) {
+                $self->log->error(qq{Period名称获取错误：$url_name. $err});
+            }
         } elsif (ref $item eq 'Mojo::DOM') {
             $period_name = $item->all_text;
+            if ($err) {
+                $self->log->error(qq{Period链接获取错误：$url_name. $err});
+            }
         }
 
         if ($config->{book}{period_url}) {
-            $period_url = $config->{book}{period_url}->($item);
+            $period_url = $self->_filter($item, $config->{book}{period_url}, $err);
         } elsif (ref $item eq 'Mojo::DOM') {
             $period_url = $item->attrs('href');
         }
@@ -188,9 +177,11 @@ sub parse {
                 }
             }
             $self->$prop($res);
+        } else {
+            $self->log->warn(qq{分析Book属性${prop}错误：${err}});
         }
     }
-
+    
     $self->save();
     $self->parsed(1);
 

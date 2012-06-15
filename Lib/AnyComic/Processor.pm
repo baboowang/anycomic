@@ -29,6 +29,14 @@ sub text {
     return $dom->all_text;
 }
 
+sub attr {
+    my ($self, $dom, $attr) = @_;
+
+    return $dom unless ref $dom eq 'Mojo::DOM';
+
+    return $dom->attrs($attr);
+}
+
 sub json {
     my ($self, $json) = @_;
 
@@ -55,20 +63,25 @@ sub key {
     return ref $obj eq 'HASH' ? $obj->{$key} : $obj->[$key];
 }
 
-sub prefix {
-    my ($self, $data_obj, $prefix) = @_;
+sub tpl {
+    my ($self, $data_obj, $tpl) = @_;
 
-    my $url_info = $self->ref_obj->url_info || {};
-
-    $prefix =~ s/\[url_info\.(\w+)\]/$url_info->{$1}/xsmieg;
+    my $tpl_data = {
+        %{$self->ref_obj->url_info || {}},
+        '_' => '##_##'
+    };
+     
+    $tpl =~ s/\{(\w+)\}/$tpl_data->{$1}/xsmieg;
     
     unless (ref $data_obj) {
-        return $prefix . $data_obj;
+        $tpl =~ s/##_##/$data_obj/g;
+        return $tpl;
     }
 
     if (ref $data_obj eq 'ARRAY') {
         for my $_ (@$data_obj) {
-            $_ = $prefix . $_;
+            (my $item = $tpl) =~ s/##_##/$_/g;
+            $_ = $item;
         }
     }
 

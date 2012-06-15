@@ -6,7 +6,7 @@ use File::Spec::Functions 'catdir';
 use Mojolicious::Lite;
 use Mojo::Util qw/encode decode/;
 use List::Util qw/min max/;
-use lib dirname(__FILE__) . "/Lib";
+use lib dirname(__FILE__) . "/lib";
 use AnyComic;
 use AnyComic::Schema;
 use utf8;
