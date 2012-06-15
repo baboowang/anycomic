@@ -27,13 +27,15 @@ my $s2 = q#eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a
 
 my $s3 = q#eval(function(p,a,c,k,e,d){e=function(c){return c};if(!''.replace(/^/,String)){while(c--)d[c]=k[c]||c;k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('12.13={"10":11,"16":"18","14":15,"2":"4","3":["5.0","8.0","9.0","6.0","7.0","19.0","30.0","29.0","28.0","31.0","34.0","33-32.0","27-22.0","21-20.0","23.1","26.1","25.1"],"24":17};',10,35,'png|jpg|chapterName|images|565话|imanhua_001|imanhua_004|imanhua_005|imanhua_002|imanhua_003|bookId|54|setting|chapterInfo|chapterId|61784|bookName||火影忍者|imanhua_006|017|imanhua_016|015|imanhua_018|count|imanhua_020|imanhua_019|imanhua_014|imanhua_009|imanhua_008|imanhua_007|imanhua_010|013|imanhua_012|imanhua_011'.split('|'),0,{}));#;
 
+my $s4 = q#eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)d[e(c)]=k[c]||e(c);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('i.j={"k":f,"g":"h","l":p,"q":"r","m":["n.0","o.0","e.0","4.0","5.0","6.0","1.0","3.0","2.0","7.0","b.0","c.0","d.0","8.0","9.0","a.0","J.0","K.0","L.0","G.0","H.0","I.0","M.0","Q.0","R.0","S.0","N.0","O.0","P.0","F.0","v.0","w.0","x.0","s.0","t.0","u.0","y.0","C.0","D.0","E.0","z.0"],"A":B};',55,55,'jpg|imanhua_007|imanhua_009|imanhua_008|imanhua_004|imanhua_005|imanhua_006|imanhua_010|imanhua_014|imanhua_015|imanhua_016|imanhua_011|imanhua_012|imanhua_013|imanhua_003|3628|bookName|石黑龙传|setting|chapterInfo|bookId|chapterId|images|imanhua_001|imanhua_002|69043|chapterName|创刊号|imanhua_034|imanhua_035|imanhua_036|imanhua_031|imanhua_032|imanhua_033|imanhua_037|imanhua_041|count|41|imanhua_038|imanhua_039|imanhua_040|imanhua_030|imanhua_020|imanhua_021|imanhua_022|imanhua_017|imanhua_018|imanhua_019|imanhua_023|imanhua_027|imanhua_028|imanhua_029|imanhua_024|imanhua_025|imanhua_026'.split('|'),0,{}));#;
+
 sub unpack_js{
     my $s = shift; 
         
     my ($e) = $s =~ /eval\(function\(.+?\){e=function\(c\)\{([^}]+)\}/;
 
     return $s unless $e;
-    say $e;
+
     my ($params) = $s =~ /\}\(('.+?')\.split\('\|'\)/;
     my ($code, $a, $c, $words)  = $params =~ /^'(.+?)',(\d+),(\d+),'(.+)'$/;
     
@@ -43,8 +45,8 @@ sub unpack_js{
     $e =~ s/c\.toString\(36\)/base36\(c\)/g;
     $e =~ s/\bc\b/\$c/g;
     $e =~ s/\be\b/&\$pe/g; 
-    $e =~ s/\+/./g;
-
+    $e =~ s/\+(?!\d)/./g;
+say $e;
     my $pe;
     eval('$pe = sub { my $c = shift; ' . $e . ' };');
 
@@ -70,7 +72,7 @@ sub base36 {
     return $num > 35 ? base36(int($num / 36)) . $chars->[$num % 36] : $chars->[$num];
 }
 
-say unpack_js($s3);
+say unpack_js($s4);
 __DATA__
 my $ua = Mojo::UserAgent->new(
     name => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:12.0) Gecko/20100101 Firefox/12.0',

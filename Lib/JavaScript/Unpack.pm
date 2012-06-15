@@ -39,7 +39,7 @@ sub unpack_js{
     $e =~ s/c\.toString\(36\)/base36\(c\)/g;
     $e =~ s/\bc\b/\$c/g;
     $e =~ s/\be\b/&\$pe/g; 
-    $e =~ s/\+/./g;
+    $e =~ s/\+(?!\d)/./g;
 
     my $pe;
     eval('$pe = sub { my $c = shift; ' . $e . ' };');
