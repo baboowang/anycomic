@@ -4,6 +4,7 @@ use Mojo::Log;
 use Mojo::UserAgent;
 use Mojo::Message::Response;
 use Mojo::Util qw/encode decode/;
+use Compress::Zlib;
 use Digest::MD5 'md5_hex';
 use AnyComic;
 use AnyComic::Schema;
@@ -24,6 +25,16 @@ has ua => sub {
     );
      
     $ua->on(error => sub { $self->log->error(pop) });
+    $ua->on(start => sub {
+        my ($ua, $tx) = @_;
+
+        $tx->on(finish => sub {
+            my $tx = shift;
+            $tx->res->body(Compress::Zlib::memGunzip($tx->res->body))
+                if $tx->res->headers->header('Content-Encoding')
+                && $tx->res->headers->header('Content-Encoding') =~ /gzip/;
+        });
+    });
     $ua->max_redirects(3);
 
     return $ua;
