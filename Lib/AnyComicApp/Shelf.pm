@@ -1,5 +1,5 @@
 package AnyComicApp::Shelf;
-use Mojo::Base 'AnyComic::Controller';
+use Mojo::Base 'AnyComicApp::Controller';
 
 sub setting {
     my $self = shift;

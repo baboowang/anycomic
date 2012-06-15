@@ -66,7 +66,7 @@ sub download {
         }
 
         $self->resource_url(my $resource_url = $resource);
-        $local_path = $self->period->data_dir . basename($resource_url);
+        $local_path = $self->period->data_dir . '/' . basename($resource_url);
 
         return 1 if -f $local_path and $self->_set_downloaded($local_path);
 

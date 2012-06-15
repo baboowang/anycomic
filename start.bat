@@ -1,0 +1,1 @@
+morbo script/anycomic

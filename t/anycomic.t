@@ -40,6 +40,8 @@ if (my $res = $app->check_url($book_url)) {
 #    $book->refresh;
     $book->parsed(0);
     $book->parse;
+    say $book->data_dir;
+    say $book->periods->[0]->data_dir;
     say 'Book Name: ', $book->name;
     say $book->author;
     say 'Periods:';
