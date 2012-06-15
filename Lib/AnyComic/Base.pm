@@ -159,11 +159,11 @@ sub _request_url {
     }
 
     if ($res->content->charset) {
-        $content = decode $res->content->charset, $content;    
+        $content = decode 'UTF-8', $content;    
     } elsif (not $is_img) {
         my ($charset) = $content =~ /<meta[^>]+charset=([\w-]+)/i;  
         $charset = 'gbk' if $charset ~~ /gb2312/i;
-        $charset ||= 'utf8';
+        $charset ||= 'UTF-8';
         #$res->headers->add('Content-Type', "text/html;charset=$charset");
         $content = decode $charset, $content;
     }

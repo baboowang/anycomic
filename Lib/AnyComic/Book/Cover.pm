@@ -13,6 +13,9 @@ has autoload => 1;
 
 sub download {
     my $self = shift;
+
+    return 1 if $self->downloaded;
+
     my $ret = $self->_download(
         $self->book->url, 
         $self->site->name . ' ' . $self->book->name . ' 封面图片', 
