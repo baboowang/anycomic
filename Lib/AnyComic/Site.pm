@@ -87,7 +87,7 @@ sub add_book {
     my $key = $self->_get_url_key($book_url);  
     my $book;
 
-    unless ($self->{_books_map}{$key}) {
+    unless (exists $self->{_books_map}{$key}) {
         $book = AnyComic::Book->new(url => $book_url, site => $self);
         weaken($book->{site});
         #$book->parse;

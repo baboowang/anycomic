@@ -63,7 +63,7 @@
 : if $check_refresh {
 <script>
 $(function(){
-    $.post('<: $c.url_for("/refresh_book.json").query(url => $book.url) :>', function(ret) {
+    $.post('<: $c.url_for("/book/refresh.json").query(url => $book.url) :>', function(ret) {
         if (ret && ret.code == 0) {
             location.reload;
         }

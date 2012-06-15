@@ -136,7 +136,7 @@ sub _request_url {
         open my $fh, '<', $cache_file;
         my $content = do { local $/ = <$fh> };
         unless ($is_img) {
-            $content = decode('UTF-8', $content);
+            $res->headers->content_type("text/html;charset=utf8");
         }
         $res->body($content);
         return $res;
@@ -163,19 +163,23 @@ sub _request_url {
     } elsif (not $is_img) {
         my ($charset) = $content =~ /<meta[^>]+charset=([\w-]+)/i;  
         $charset = 'gbk' if $charset ~~ /gb2312/i;
-        if ($charset) {
-            $res->headers->add('Content-Type', "text/html;charset=$charset");
-            $content = decode $charset, $content;
-        }
+        $charset ||= 'utf8';
+        #$res->headers->add('Content-Type', "text/html;charset=$charset");
+        $content = decode $charset, $content;
     }
 
     # 图片本身会保存在download目录，就不缓存了
     unless ($is_img) {
+        $content = encode 'UTF-8', $content;
         open my $fh, '>', $cache_file;
         print $fh $content;
         close $fh;
+
+        $res->headers->content_type("text/html;charset=utf8");
+        $res->body($content);
     }
-    return $tx->res;
+
+    return $res;
 }
 
 sub _filter {
@@ -248,7 +252,8 @@ sub _filter {
             }
             when ('regexp') {
                 for my $_ (@res) {
-                    $_ = decode("UTF-8", "$_") if ref $_ eq 'Mojo::DOM';
+                    $_ = "$_" if ref $_ eq 'Mojo::DOM';
+                    $_ = decode('UTF-8', $_) unless utf8::is_utf8($_); 
                     my @ma = "$_" =~ m/$filter_value/xsmig; 
                     unless (@ma) {
                         $$err = qq{正则未匹配：$filter_value. \n 内容：$_};

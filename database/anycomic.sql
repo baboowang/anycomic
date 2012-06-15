@@ -1,7 +1,7 @@
 CREATE table IF NOT EXISTS shelf (
     book_id TEXT PRIMARY KEY,
     weight INTEGER DEFAULT 1,
-    add_time INTEGER DEFAULT CURRENT_TIME,
+    add_time INTEGER DEFAULT CURRENT_TIMESTAMP,
     last_period_update_time TEXT,
     FOREIGN KEY (book_id) REFERENCES book(id)
 );

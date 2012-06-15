@@ -51,6 +51,7 @@ sub unpack_js{
     my @words = split /\|/, $words;
     
     while($c--) {
+        next if $words[$c] ~~ undef or $words[$c] eq '';
         my $word = $pe->($c);
         $code =~ s/\b$word\b/$words[$c]/ge;
     }

@@ -1,7 +1,7 @@
 : cascade layout::default with common { title => '配置' }
 : around content -> {
 <p>
-<input type="button" value="重载配置" cmd="reload_config"/>
+<input type="button" value="重载配置" cmd="config/reload"/>
 </p>
 <ul id="ajax_info">
 </ul>

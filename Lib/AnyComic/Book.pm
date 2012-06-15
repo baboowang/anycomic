@@ -177,6 +177,10 @@ sub parse {
                 }
             }
             $self->$prop($res);
+
+            if (ref $self->$prop && $self->$prop->can('save')) {
+                $self->$prop->save();
+            }
         } else {
             $self->log->warn(qq{分析Book属性${prop}错误：${err}});
         }

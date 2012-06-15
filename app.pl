@@ -78,7 +78,7 @@ plugin xslate_renderer => {
 
 my $base = dirname(__FILE__);
 push @{app->renderer->paths}, catdir($base, 'templates'); 
-push @{app->static->paths}, catdir($base, 'www'), catdir($base, 'download');
+push @{app->static->paths}, catdir($base, 'public'), catdir($base, 'download');
 
 my $anycomic = AnyComic->new(home_dir => dirname(__FILE__));
 
@@ -404,5 +404,4 @@ sub ajax_output {
 }
 
 app->types->type(json => 'application/json; charset=utf-8;'); 
-
 app->start;

@@ -23,5 +23,5 @@
 : }
 
 : macro book_cover -> $book {
-: $c.image($book.cover ? $c.url_for('/cover').query({url => $book.url}) : '/img/default.jpg', alt => $book.name) | mark_raw
+: $c.image($book.cover ? $c.url_for('/image/cover').query({url => $book.url}) : '/img/default.jpg', alt => $book.name) | mark_raw
 : }

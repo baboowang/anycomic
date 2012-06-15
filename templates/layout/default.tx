@@ -39,7 +39,7 @@
     </div>
 
     <div id="dialog-add-comic" style="display:none;padding:20px">
-        <form id="add-book-form" action="/add_book" method="get">
+        <form id="add-book-form" action="/book/add" method="get">
             <label for="name" style="font-weight:bold;font-size:14px;">漫画地址：</label>
             <input type="text" name="url" class="text ui-widget-content ui-corner-all" style="width:400px;height:25px"/>
             <p class="err-msg" style="color:red"></p>

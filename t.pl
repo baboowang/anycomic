@@ -25,13 +25,15 @@ my $s = q#eval(function(p,a,c,k,e,d){e=function(c){return c};if(!''.replace(/^/,
 
 my $s2 = q#eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)d[e(c)]=k[c]||e(c);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('8.7={"9":b,"a":"6","1":2,"3":"5","4":["c.0","k.0","j.0","l.0","n.0","m.0","i.0","e.0","d.0","f.0"],"h":g};',24,24,'jpg|chapterId|46686|chapterName|images|336话|海贼王|chapterInfo|setting|bookId|bookName|55|imanhua_001_195546604|imanhua_009_195546761|imanhua_008_195546745|imanhua_010_195546808|10|count|imanhua_007_195546729|imanhua_003_195546667|imanhua_002_195546620|imanhua_004_195546683|imanhua_006_195546729|imanhua_005_195546714'.split('|'),0,{}));imanhua.core.bind();#;
 
+my $s3 = q#eval(function(p,a,c,k,e,d){e=function(c){return c};if(!''.replace(/^/,String)){while(c--)d[c]=k[c]||c;k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('12.13={"10":11,"16":"18","14":15,"2":"4","3":["5.0","8.0","9.0","6.0","7.0","19.0","30.0","29.0","28.0","31.0","34.0","33-32.0","27-22.0","21-20.0","23.1","26.1","25.1"],"24":17};',10,35,'png|jpg|chapterName|images|565话|imanhua_001|imanhua_004|imanhua_005|imanhua_002|imanhua_003|bookId|54|setting|chapterInfo|chapterId|61784|bookName||火影忍者|imanhua_006|017|imanhua_016|015|imanhua_018|count|imanhua_020|imanhua_019|imanhua_014|imanhua_009|imanhua_008|imanhua_007|imanhua_010|013|imanhua_012|imanhua_011'.split('|'),0,{}));#;
+
 sub unpack_js{
     my $s = shift; 
         
     my ($e) = $s =~ /eval\(function\(.+?\){e=function\(c\)\{([^}]+)\}/;
 
     return $s unless $e;
-
+    say $e;
     my ($params) = $s =~ /\}\(('.+?')\.split\('\|'\)/;
     my ($code, $a, $c, $words)  = $params =~ /^'(.+?)',(\d+),(\d+),'(.+)'$/;
     
@@ -53,6 +55,7 @@ sub unpack_js{
     my @words = split /\|/, $words;
     
     while($c--) {
+        next if $words[$c] ~~ undef or $words[$c] eq '';
         my $word = $pe->($c);
         $code =~ s/\b$word\b/$words[$c]/ge;
     }
@@ -67,7 +70,7 @@ sub base36 {
     return $num > 35 ? base36(int($num / 36)) . $chars->[$num % 36] : $chars->[$num];
 }
 
-say unpack_js($s);
+say unpack_js($s3);
 __DATA__
 my $ua = Mojo::UserAgent->new(
     name => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:12.0) Gecko/20100101 Firefox/12.0',
