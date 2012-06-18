@@ -9,6 +9,6 @@ sub index {
 
 sub reload {
     my $self = shift;
-    $self->_ajax($self->anycomic->reload_config);
+    $self->ajax_result($self->anycomic->reload_config);
 }
 1;

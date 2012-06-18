@@ -44,7 +44,7 @@
         <dt><: $book.name :>漫画列表</dt>
         <dd>
             <ul id="periods">
-                : for $book.periods -> $period {
+                : for $book.is_period_asc ? $book.periods.reverse() : $book.periods -> $period {
                 <li><: period($period) :></li>
                 : }
                 <li class="clear"></li>

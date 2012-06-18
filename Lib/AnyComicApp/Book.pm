@@ -1,6 +1,7 @@
 package AnyComicApp::Book;
 use Mojo::Base 'AnyComicApp::Controller';
 use AnyComicApp::Utils;
+use utf8;
 
 sub index {
     my $self = shift;
@@ -39,10 +40,10 @@ sub refresh {
     my $res; 
 
     unless ($url and ($res = $anycomic->check_url($url))) {
-        return $self->_ajax(0);
+        return $self->fail("书链接不能识别: $url");
     }
 
-    return $self->_ajax($res->{book}->refresh);
+    $self->ajax_result($res->{book}->refresh);
 }
 
 sub add {
@@ -52,15 +53,14 @@ sub add {
     my $res; 
 
     unless ($url && ($res = $anycomic->check_url($url))) {
-        #erorr, add flash message
-        return $self->redirect_to('/');
+        return $self->fail(ERR_BOOK_URL, go => '/');
     }
 
     my $rs = $anycomic->get_schema->resultset('Shelf');
     
     if ($rs->find($res->{book}->id)) {
         #alreay exists, add flash message
-        return $self->redirect_to('/');
+        return $self->fail('书本已经添加过', go => '/');
     }
     
     $rs->create({
@@ -69,6 +69,6 @@ sub add {
     });
     $res->{book}->parse; 
 
-    $self->redirect_to('/');
+    $self->done(msg => '添加书本成功《' . $res->{book}->name . '》');
 }
 1;

@@ -2,6 +2,7 @@ package AnyComicApp;
 use Mojo::Base 'Mojolicious';
 use AnyComicApp::Controller;
 use AnyComicApp::Utils;
+use Text::Xslate::Util qw/mark_raw/;
 use AnyComic;
 use Modern::Perl;
 
@@ -27,6 +28,9 @@ sub startup {
                     return sub {
                         return cutstr(shift, $len);
                     };
+                },
+                jsstr => sub {
+                    return mark_raw(jsstr(shift));
                 },
             },
         },

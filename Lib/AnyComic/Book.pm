@@ -18,6 +18,9 @@ has data_dir => sub {
     my $self = shift;
     return abs_path($self->app->home_dir) . '/download/' . substr($self->id, 0, 6) 
 };
+has is_period_asc => sub {
+    return lc(shift->site->config->{book}{period_order} // 'desc') eq 'asc';
+};
 
 sub new {
     my $self = shift->SUPER::new(@_);
@@ -215,18 +218,21 @@ sub latest_period {
 
     return undef unless @{$self->{periods}};
 
-    my $period = $self->{periods}->[0];
+    my $period_index = $self->is_period_asc ? $#{$self->{periods}} : 0;
+    my $period = $self->{periods}->[$period_index];
     $period->load;
 
     return $period;
 }
 
 sub next_period {
-    shift->_period_offset(shift, -1);
+    my ($self, $period) = @_;
+    $self->_period_offset($period, $self->is_period_asc ? 1 : -1);
 }
 
 sub prev_period {
-    shift->_period_offset(shift, 1);
+    my ($self, $period) = @_;
+    $self->_period_offset($period, $self->is_period_asc ? -1 : 1);
 }
 
 sub _period_offset {

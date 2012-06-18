@@ -45,42 +45,15 @@
             <p class="err-msg" style="color:red"></p>
         </form>
     </div>
-
-    </body>
+    <div id="popup-msg" style="display:none"></div>
+    : if $__msg && $__msg.msg {
     <script>
     $(function(){
-        $('#dialog-add-comic').dialog({
-            autoOpen : false,
-            width : 500,
-            height : 200,
-            modal : true,
-            title : '快速添加漫画',
-            buttons : {
-                "添加漫画" : function() {
-                    var $f = $('#add-book-form'), $url = $f.find('input[name=url]');
-                    
-                    if ($.trim($url.val()) == '') {
-                        $f.find('.err-msg').html('请填写地址。');
-                        return;
-                    }
-
-                    if (! /^http/i.test($url.val())) {
-                        $f.find('.err-msg').html('地址必须是以http开头的合法链接。'); 
-                        return;
-                    }
-
-                    $f[0].submit();
-                },
-                "取消" : function() {
-                    $(this).dialog('close');
-                }
-            }
-        });
-        $('#add_comic_link').click(function(event){
-            event.preventDefault();
-        
-            $('#dialog-add-comic').dialog('open');      
-        });
+        popup_msg(<: $__msg.msg | jsstr :>, <: $__msg.type | jsstr :>);
     });
     </script>
-</html><!--{elapsed_time}-->
+    : }
+    </body>
+    <script>
+    </script>
+</html>

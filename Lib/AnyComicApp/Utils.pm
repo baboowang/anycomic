@@ -2,7 +2,14 @@ package AnyComicApp::Utils;
 use Modern::Perl;
 use Mojo::Util qw/encode decode/;
 use Exporter 'import';
-our @EXPORT = qw/cutstr trim/;
+use utf8;
+
+use constant {
+    ERR_BOOK_URL => '书链接无法识别',
+    ERR_PERIOD_URL => '话链接无法识别',
+};
+
+our @EXPORT = qw/cutstr trim jsstr ERR_BOOK_URL ERR_PERIOD_URL/;
 
 sub cutstr {
     my ($str, $len) = @_;
@@ -52,5 +59,13 @@ sub trim {
     $str =~ s/^[$chars]+|[$chars]+$//g;
 
     return $str;
+}
+
+sub jsstr {
+    my $str = shift;
+
+    $str =~ s/"/\\"/g;
+
+    return qq{"$str"};
 }
 1;

@@ -72,6 +72,7 @@
   version : 20120613
   book :
     periods : 'div.comic_chapter_middle > div:first-child > ul a'
+    period_order : asc
     period_name :
         - processor : attr title
     name : 'div.address a:last-child'

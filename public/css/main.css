@@ -56,6 +56,12 @@ a.op{color:green}
 .i-di{background-position:-195px -39px}
 .i-new-talk{background-position:-195px -74px}
 
+#popup-msg{line-height:30px;padding:0 1em;font-size:13px;font-weight:bold;background:#FFFACD;position:fixed !important;position:absolute;top:0px;_top:expression(eval(document.documentElement.scrollTop)); -moz-border-radius:0 0 3px 3px;-webkit-border-radius:0 0 3px 3px;z-index:10000}
+#popup-msg.info{background:#fffacd;color:#000}
+#popup-msg.succ{background:#21a121;color:#fff}
+#popup-msg.error{background:#CC433F;color:#fff}
+#popup-msg.error .error{color:#fff !important;color:red}
+
 #top-line{display:block;height:3px;overflow:hidden;background:#F3F8D7;text-indent:-1000px}
 #wrapper{width:950px;margin:0 auto}
 #header{height:40px;border-bottom:1px dashed #F3F8D7;margin:0 auto;margin-bottom:10px;position:relative}

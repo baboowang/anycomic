@@ -456,3 +456,71 @@ if (document.body && document.body.id && page_inits[document.body.id]) {
 if (top != window) {
     //top.location = location.href;
 }
+
+//顶部弹出消息
+$(function(){
+    var $popup_msg = $('#popup-msg'), hideTimer = null, hideInterval = 10000,
+    minShowTime = 500, startTime = 0;
+    function popup_msg(msg, type)
+    {
+        type = type || 'error';
+        $popup_msg.html(msg).show();
+        $popup_msg.attr('class', type);
+        var left = ($(window).width() - ($popup_msg.attr('offsetWidth') || $popup_msg.prop('offsetWidth'))) / 2;
+        $popup_msg.css('left', left);//.hide().slideDown();
+        startTime = + new Date;
+        hideTimer = setTimeout(function(){ hide_msg() }, hideInterval);
+    }
+    
+    function hide_msg()
+    {
+        if (hideTimer) {
+            window.clearTimeout(hideTimer);
+            hideTimer = null;
+        }
+        var showTime = + new Date - startTime;
+        if (showTime < minShowTime) {
+            hideTimer = setTimeout(function() { hide_msg() }, minShowTime - showTime);
+            return;
+        }
+        $popup_msg.hide();
+    }
+    window.popup_msg = popup_msg;
+    window.hide_popup_msg = hide_msg;
+}); 
+
+//添加漫画弹出
+$(function(){
+    $('#dialog-add-comic').dialog({
+        autoOpen : false,
+        width : 500,
+        height : 200,
+        modal : true,
+        title : '快速添加漫画',
+        buttons : {
+            "添加漫画" : function() {
+                var $f = $('#add-book-form'), $url = $f.find('input[name=url]');
+                
+                if ($.trim($url.val()) == '') {
+                    $f.find('.err-msg').html('请填写地址。');
+                    return;
+                }
+
+                if (! /^http/i.test($url.val())) {
+                    $f.find('.err-msg').html('地址必须是以http开头的合法链接。'); 
+                    return;
+                }
+
+                $f[0].submit();
+            },
+            "取消" : function() {
+                $(this).dialog('close');
+            }
+        }
+    });
+    $('#add_comic_link').click(function(event){
+        event.preventDefault();
+    
+        $('#dialog-add-comic').dialog('open');      
+    });
+});

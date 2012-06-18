@@ -24,12 +24,6 @@ sub register {
 
         return 1;
     });
-
-    $app->helper(is_ajax => sub {
-        my $h = shift->req->headers->header('X-Requested-With');
-        
-        return $h and $h eq 'XMLHttpRequest';
-    });
     
     $app->helper(page_batch_count => sub {
         my ($self, $count) = @_;
@@ -85,7 +79,7 @@ sub register {
             order_by => {
                 -desc => 'last_time',
             },
-            rows => 10,
+            rows => 15,
         });
 
         my @read_logs = ();

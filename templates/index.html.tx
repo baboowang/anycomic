@@ -72,7 +72,7 @@
 <div id="right">
 : if $read_logs.size() {
 <dl class="right-box" id="his">
-    <dt><a href="#" id="clear-his" class="right">清除</a>我的阅读记录</dt>
+    <dt><!--<a href="#" id="clear-his" class="right">清除</a>-->我的阅读记录</dt>
     <dd>
         <ul>
         : for $read_logs -> $period {
