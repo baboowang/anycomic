@@ -16,5 +16,7 @@ Please visit http://mojolicio.us for detailed installation instructions.
 
 EOF
 
+$ENV{MOJO_MODE} ||= 'production';
+
 # Start commands for application
 Mojolicious::Commands->start_app('AnyComicApp');

@@ -15,8 +15,6 @@ sub startup {
 
     $self->controller_class('AnyComicApp::Controller');
 
-    $self->mode($ENV{MOJO_MODE} // 'production');
-
     push @{$self->plugins->namespaces}, 'AnyComicApp::Plugin';
 
     # Documentation browser under "/perldoc"
