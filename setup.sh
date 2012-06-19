@@ -1,6 +1,6 @@
 #/bin/bash
 echo Install perl modules
-cpan Mojolicious MojoX::Renderer::Xslate Modern::Perl DBIx::Class
+cpan Mojolicious MojoX::Renderer::Xslate Modern::Perl DBIx::Class Encode::Locale
 echo Install database
 if [ ! -e "database/anycomic.db" ]
 then

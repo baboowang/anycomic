@@ -15,35 +15,10 @@ use JSON;
 use utf8;
 use autodie;
 
-has log => sub { Mojo::Log->new };
-
-has ua => sub {
-    my $self = shift;
-
-    my $ua = Mojo::UserAgent->new(
-        name => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:12.0) Gecko/20100101 Firefox/12.0',
-    );
-     
-    $ua->on(error => sub { $self->log->error(pop) });
-    $ua->on(start => sub {
-        my ($ua, $tx) = @_;
-
-        $tx->on(finish => sub {
-            my $tx = shift;
-            $tx->res->body(Compress::Zlib::memGunzip($tx->res->body))
-                if $tx->res->headers->header('Content-Encoding')
-                && $tx->res->headers->header('Content-Encoding') =~ /gzip/;
-        });
-    });
-    $ua->max_redirects(3);
-
-    return $ua;
-};
-
-has ['app'];
-
+has app => sub { AnyComic->new };
+has log => sub { shift->app->log };
+has ua => sub { shift->app->ua };
 has url_info => sub { {} };
-
 has ['autoload', '_loaded'] => 0;
 
 sub new {

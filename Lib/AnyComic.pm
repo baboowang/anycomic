@@ -1,12 +1,38 @@
 package AnyComic;
-use Mojo::Base 'AnyComic::Base';
+use Mojo::Base -base;
 use Mojo::URL;
 use AnyComic::Site;
+use Mojo::Log;
 use Carp qw/carp croak/;
 use Scalar::Util 'weaken';
 use File::Spec::Functions 'catdir';
 use YAML::XS 'LoadFile';
 use utf8;
+
+has log => sub { Mojo::Log->new };
+
+has ua => sub {
+    my $self = shift;
+
+    my $ua = Mojo::UserAgent->new(
+        name => 'Mozilla/5.0 (Windows NT 5.1) Gecko/20100101 Firefox/12.0',
+    );
+     
+    $ua->on(error => sub { $self->log->error(pop) });
+    $ua->on(start => sub {
+        my ($ua, $tx) = @_;
+
+        $tx->on(finish => sub {
+            my $tx = shift;
+            $tx->res->body(Compress::Zlib::memGunzip($tx->res->body))
+                if $tx->res->headers->header('Content-Encoding')
+                && $tx->res->headers->header('Content-Encoding') =~ /gzip/;
+        });
+    });
+    $ua->max_redirects(3);
+
+    return $ua;
+};
 
 has [qw/sites _domain_map/];
 
@@ -94,6 +120,7 @@ sub _add_sites {
         my $site_obj = AnyComic::Site->new(
             name => $site->{name},
             domain => $site->{domain},
+            origin_config => $site,
             config => $site,
             books => [],
             app => $self

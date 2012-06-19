@@ -5,6 +5,7 @@ use AnyComicApp::Utils;
 use Text::Xslate::Util qw/mark_raw/;
 use AnyComic;
 use Modern::Perl;
+use utf8;
 
 # This method will run once at server start
 sub startup {
@@ -13,6 +14,8 @@ sub startup {
     $self->secret("Most of the time, life is boring.");
 
     $self->controller_class('AnyComicApp::Controller');
+
+    $self->mode($ENV{MOJO_MODE} // 'production');
 
     push @{$self->plugins->namespaces}, 'AnyComicApp::Plugin';
 
@@ -35,9 +38,12 @@ sub startup {
             },
         },
     });
-
     
     my $anycomic = AnyComic->new(home_dir => $self->home->to_string);
+    if ($self->mode eq 'production') {
+        $anycomic->log->level('error');
+        $anycomic->log->path($self->home->rel_file('log/production.log'));
+    }
 
     $self->helper(anycomic => sub {
         return $anycomic;

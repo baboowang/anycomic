@@ -1,0 +1,33 @@
+name : 爱漫画
+version : 20120613
+domain : imanhua.com
+book :
+    name : 'h1'
+    rule : '/comic/(?<book_id>\d+)/?$'
+    periods : 'ul#subBookList > li > a'
+    props :
+        cover : 
+            - selector : 'div.bookCover img:first-child'
+        author : 
+            - selector : 'p.bookAttr'
+            - regexp : '作者：([^<>\s]+)'
+        intro :
+            - selector : 'div.intro > p:first-child'
+            - processor : text
+        update_time :
+            - selector : 'p.bookAttr'
+            - regexp : '更新时间：([\d-]+)'
+        status : 'p.bookAttr span:first-child em'
+period :
+    rule : '/comic/(?<book_id>\d+)/list_(?<period_id>\d+).html'
+    book : 's{list_\d+\.html}{}'
+    pages : 
+        - selector : 'script:not([src]):eq(1)'
+        - processor : text
+        - regexp : '(.+?);imanhua\.core\.bind'
+        - processor : 'unpack'
+        - regexp : '=\s*(\{.+?\}(?=;))' 
+        - processor : 
+            - json
+            - key images
+            - tpl http://t4.mangafiles.com/Files/Images/{book_id}/{period_id}/{_}

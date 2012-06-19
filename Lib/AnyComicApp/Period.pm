@@ -7,7 +7,7 @@ sub index {
     my $anycomic = $self->anycomic;
     my $url = $self->param('url');
     my $start = int($self->param('start') || '1') || 1;
-    my $batch_count = int($self->param('batch'));
+    my $batch_count = int($self->param('batch') || '0');
     my $res;
     
     if ($batch_count) {

@@ -6,9 +6,10 @@ use JSON;
 use Scalar::Util 'weaken';
 use AnyComic::Book;
 use AnyComic::Schema;
+use YAML::XS qw/DumpFile Dump/;
 use utf8;
 
-has [qw/app name domain config books _books_map _period_book_map/];
+has [qw/app name domain config origin_config books _books_map _period_book_map/];
 
 has id => sub { shift->domain };
 
@@ -225,7 +226,7 @@ sub _on_save {
     my ($self, $data) = @_;
 
     $data->{id} = $data->{domain};
-    $data->{config} = '';
+    $data->{config} = decode('UTF-8', Dump($self->origin_config));
 
     return 1;
 }
