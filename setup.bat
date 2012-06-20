@@ -6,4 +6,5 @@
 @call ppm install Encode::Locale
 @echo Install database
 if not exist database\anycomic.db ren database\anycomic.db.bak anycomic.db
+if not exist log mkdir log
 pause

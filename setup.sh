@@ -6,3 +6,8 @@ if [ ! -e "database/anycomic.db" ]
 then
     mv database/anycomic.db.bak database/anycomic.db
 fi
+
+if [ ! -e "log" ]
+then
+    mkdir log
+fi
