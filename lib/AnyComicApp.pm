@@ -7,6 +7,8 @@ use AnyComic;
 use Modern::Perl;
 use utf8;
 
+our $VERSION = 0.10;
+
 # This method will run once at server start
 sub startup {
     my $self = shift;
