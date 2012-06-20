@@ -1,0 +1,14 @@
+{
+    "appName" : {
+        "message" : "AnyComic"
+    },
+    "appDescription" : {
+        "message" : "Quick add comic to my anycomic shelf"
+    },
+    "addToMyShelf" : {
+        "message" : "Add to my shelf"
+    },
+    "alreadyInMyShelf" : {
+        "message" : "Already in my shelf"
+    }
+}

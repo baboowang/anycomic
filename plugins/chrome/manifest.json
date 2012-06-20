@@ -1,0 +1,21 @@
+{
+"name": "__MSG_appName__",
+"version": "1.0.0",
+"description" : "__MSG_appDescription__",
+"permissions" : ["tabs", "<all_urls>"],
+"default_locale" : "zh",
+"icons": {
+    "32": "icon_32.png",
+    "64": "icon_64.png",
+    "128": "icon_128.png"
+},
+"background" : {
+    "scripts" : [ "background.js" ]
+},
+"page_action" : {
+    "default_title" : "__MSG_addToMyShelf__",
+    "default_icon" : "icon_16.png"
+},
+"manifest_version" : 2,
+"options_page" : "options.html"
+}

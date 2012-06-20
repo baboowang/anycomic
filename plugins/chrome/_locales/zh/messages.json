@@ -1,0 +1,14 @@
+{
+    "appName" : {
+        "message" : "有本漫画"
+    },
+    "appDescription" : {
+        "message" : "快速添加漫画至书架"
+    },
+    "addToMyShelf" : {
+        "message" : "添加至我的书架"
+    },
+    "alreadyInMyShelf" : {
+        "message" : "已在书架中"
+    }
+}
