@@ -8,6 +8,8 @@ sub index {
     my $url = $self->param('url');
     my $start = int($self->param('start') || '1') || 1;
     my $batch_count = int($self->param('batch') || '0');
+    my $style = $self->param('style');
+
     my $res;
     
     if ($batch_count) {
@@ -49,6 +51,12 @@ sub index {
     $anycomic->get_schema->resultset('ReadLog')
         ->update_log($res->{book}->id, $res->{period}->id);
 
-    $self->render('period');
+    my $styles = ['supersized'];
+
+    if ($style && $style ~~ $styles) {
+        $self->render('period_' . $style);
+    } else {
+        $self->render('period');
+    }
 }
 1;

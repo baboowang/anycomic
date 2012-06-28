@@ -104,5 +104,10 @@
 </div>
 <div id="loading-info" style="position:absolute;right:0;top:0;line-height:30px;font-weight:bold;font-size:13px;background:green;color:#fff;padding:0 10px;">由于加载的图片较多，有时加载会较慢，请耐心等候...</div>
 <div class="clear"></div>
+
+<div style="position:absolute;left:0;top:0;padding:5px;font-size:14px;background:#fff;opacity:0.5px">
+    <a href="<: period_url($period) :>&style=supersized" style="color:#000">切换至阅读器模式</a>
+</div>
+
 : }
 
