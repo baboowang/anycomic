@@ -54,7 +54,7 @@
     function rl(elem) {
         var $img = $(elem).parent().find('img');
         var src = $img[0].src.replace(/&?r=\d+/, '').replace(/\?$/, '');
-        src = (/\?/.test(src) ? '&' : '?') + 'r=' + (+ new Date);
+        src += (/\?/.test(src) ? '&' : '?') + 'r=' + (+ new Date);
         $img[0].src = src;
         if (elem.tagName != 'IMG') {
             $(elem).remove();    

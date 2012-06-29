@@ -34,7 +34,7 @@ sub download {
 
     my $local_path = $self->period->data_dir . '/' . basename($self->resource_url || $url); 
     
-    return 1 if -f $local_path && $self->_set_downloaded($local_path);
+    return 1 if -f $local_path && $self->_set_downloaded($local_path) && $self->save();
 
     my $headers = { referer => $self->period->url }; 
     my $resp = $self->_request_url($url, $headers); 

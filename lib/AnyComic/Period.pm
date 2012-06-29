@@ -80,6 +80,8 @@ sub parse {
         });
 
         weaken($page->{period});
+        $page->save();
+
         push @pages, $page;
     }
 
