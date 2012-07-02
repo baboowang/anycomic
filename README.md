@@ -15,9 +15,7 @@ AnyComic在本地搭建了一个实时的漫画采集站点，通过配置文件
 
 2. 下载 [AnyComic应用](https://github.com/baboowang/anycomic/zipball/master)
 
-3. 进入应用目录，运行安装脚本setup.bat (非Window系统运行setup.sh)
-
-4. 运行start.bat启动服务 (非Window系统运行start.sh)
+3. 进入应用目录，运行安装脚本anycomic.pl
 
 # 使用方法：
 服务启动成功，你会看到一行类似下面的输出信息：
