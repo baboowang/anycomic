@@ -93,9 +93,18 @@ page_inits['index'] = function(){
     window.remove_from_shelf = function(id, elem, event) {
         event = $.event.fix(event);
         event.preventDefault();
-        var url = cur_url + (cur_url.indexOf('?') > -1 ? '&' : '?') +
-            'ac=removebook&id=' + id;
-        load_shelf(url, 0);
+        $.get('/book/remove?id=' + id, function(ret) {
+            if (ret && ret.code == 0) {
+                popup_msg(ret.msg, 'succ');
+                load_shelf(cur_url, 0);
+            } else {
+                if (ret) {
+                    popup_msg(ret.msg, 'error');
+                } else {
+                    popup_msg('服务器返回错误', 'error');
+                }
+            }
+        }, 'json');
     };
     
     var cur_url = location.href;
@@ -284,7 +293,11 @@ page_inits.period = function(){
     function preload (src) 
     {
         $.get(src + '&preload=1', function(){
-            loaded[src] = 1;
+            var img = new Image;
+            img.onload = function() {
+                loaded[src] = 1;
+            };
+            img.src = src;
         });
     }
 

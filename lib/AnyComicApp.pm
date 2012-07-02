@@ -7,7 +7,7 @@ use AnyComic;
 use Modern::Perl;
 use utf8;
 
-our $VERSION = 0.10;
+our $VERSION = "0.1.1";
 
 # This method will run once at server start
 sub startup {

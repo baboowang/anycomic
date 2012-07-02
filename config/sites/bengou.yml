@@ -13,16 +13,35 @@ search :
         last_update_period : 'h1 a:last-child'
         author : 'p:first-of-type a:first-child'
 book :
-    periods : '#mhlist li > h3:first-child a'
+    periods : '#mhlist li a:first-of-type'
     name : 'div.insideright h1'
     rule : '\d+/\w+/index\.html'
     props :
         cover : 'div.section div.recommendedpic img'
-        author : 'div.sectioninfo > p:nth-of-type(1) a'
-        status : 'div.sectioninfo > p:nth-of-type(2) a'
-        cates : 'div.sectioninfo > p:nth-of-type(3) a'
-        area : 'div.sectioninfo > p:nth-of-type(5) a'
-        update_time : 'div.sectioninfo > p:nth-of-type(6) span'
+        author : 
+            - selector : 'div.sectioninfo > p'
+            - processor : 'filter 作.*者'  
+            - selector : 'a'
+        status : 
+            - selector : 'div.sectioninfo > p'
+            - processor : 'filter 状态'
+            - selector : 'a'
+        cates : 
+            - selector : 'div.sectioninfo > p'
+            - processor : 'filter 类型'
+            - selector : 'a'
+        area : 
+            - selector : 'div.sectioninfo > p'
+            - processor : 'filter 区域'
+            - selector : 'a'
+        update_time : 
+            - selector : 'div.sectioninfo > p'
+            - processor : 'filter 更新时间'
+            - selector : span
+            - processor : text
+            - script : |
+                my ($year, $month, $day) = $_ =~ /(\d+)年(\d+)月(\d+)日/; 
+                return "20$year-$month-$day";
         intro : 'div.sectionabout > p:first-of-type'    
 period :
     pages :

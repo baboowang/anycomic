@@ -1,6 +1,6 @@
 package AnyComic::Processor;
 use Mojo::Base -base;
-use Mojo::Util qw/encode/;
+use Mojo::Util qw/encode decode/;
 use JSON;
 
 has [qw/ref_obj/];
@@ -26,7 +26,11 @@ sub text {
 
     return $dom unless ref $dom eq 'Mojo::DOM';
 
-    return $dom->all_text;
+    my $text = $dom->all_text;
+
+    $text = decode('UTF-8', $text) unless utf8::is_utf8($text); 
+
+    return $text;
 }
 
 sub attr {
@@ -48,6 +52,12 @@ sub json {
     }
 
     return $obj;
+}
+
+sub filter {
+    my ($self, $dom, $regexp) = @_;
+
+    return $dom if $self->text($dom) ~~ qr/$regexp/i;
 }
 
 sub key {

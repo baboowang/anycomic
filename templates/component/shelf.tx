@@ -7,7 +7,7 @@
             <ul class="floor-left">
         : }
                 <li class="book <: $~book % $shelf_x_size == ($shelf_x_size - 1) || $~book.is_last ? 'last' : '' :>">
-                    <a href="<: book_url($book) :>" target="_blank">
+                    <a href="<: book_url($book) :>" target="_blank" title="来自<: $book.site.name :>">
                         <: book_cover($book) :>
                     </a>
                     <span>

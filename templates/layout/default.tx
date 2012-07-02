@@ -35,7 +35,7 @@
                 <a href="/mine/">我的书架</a><i>|</i>
             </p>
         </div>
-        <script src="/js/yb.js?v=18"></script>
+        <script src="/js/yb.js?v=19"></script>
     </div>
 
     <div id="dialog-add-comic" style="display:none;padding:20px">

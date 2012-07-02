@@ -278,8 +278,14 @@ sub _filter {
                             $data_obj = $processor->$method(@params);
                             last unless $data_obj;
                         } else {
-                            $self->log->error(qq{Unknow Processor: $method});
-                            return;
+                            no strict 'refs';
+                            
+                            if (defined(&{$method})) {
+                                $data_obj = \&{$method}->(@params);
+                            } else {
+                                $self->log->error(qq{Unknow Processor: $method});
+                                return;
+                            }
                         }
                     }
                     push @new_res, $data_obj if $data_obj;

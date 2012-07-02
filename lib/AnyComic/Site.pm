@@ -109,6 +109,23 @@ sub add_book {
     return $res;
 }
 
+sub remove_book {
+    my ($self, $id) = @_;
+    
+    $id = $id->id if ref $id eq 'AnyComic::Book';
+
+    unless (exists $self->{_books_map}{$id}) {
+        return 1;
+    }
+    
+    my $book = $self->get_schema->resultset('Book')->find($id);
+    $book->delete if $book;
+    undef $self->{books}[$self->{_books_map}{$id}];
+    delete $self->{_books_map}{$id};
+
+    return 1;
+}
+
 sub search {
     my ($self, $keyword) = @_;
     

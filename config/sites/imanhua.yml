@@ -17,6 +17,7 @@ book :
         update_time :
             - selector : 'p.bookAttr'
             - regexp : '更新时间：([\d-]+)'
+            - script : 's/\b(\d)\b/0$1/g; $_'
         status : 'p.bookAttr span:first-child em'
 period :
     rule : '/comic/(?<book_id>\d+)/list_(?<period_id>\d+).html'

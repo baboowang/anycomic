@@ -46,6 +46,27 @@ sub refresh {
     $self->ajax_result($res->{book}->refresh);
 }
 
+sub remove {
+    my $self = shift;
+    my $anycomic = $self->anycomic;
+    my $id = trim($self->param('id'));
+    my $res;
+    
+    my $rs = $anycomic->get_schema->resultset('Shelf');
+    my $row = $rs->find($id);
+
+    unless ($row) {
+        return $self->fail('漫画不存在', go => '/');
+    }
+
+    my $book = $anycomic->get_book($id);
+    $book->site->remove_book($book);
+
+    $row->delete;
+
+    $self->succ('漫画《' . $book->name . '》移出书架 ', go => '/');
+}
+
 sub add {
     my $self = shift;
     my $anycomic = $self->anycomic;
@@ -63,12 +84,17 @@ sub add {
         return $self->fail('书本已经添加过', go => '/');
     }
     
-    $rs->create({
-        book_id => $res->{book}->id,
-        last_period_update_time => $res->{book}->update_time || ''
-    });
-    $res->{book}->parse; 
+    my $ok = $res->{book}->parse; 
+    
+    if ($ok) { 
+        $rs->create({
+            book_id => $res->{book}->id,
+            last_period_update_time => $res->{book}->update_time || ''
+        });
 
-    $self->done(msg => '添加书本成功《' . $res->{book}->name . '》');
+        $self->done(msg => '添加书本成功《' . $res->{book}->name . '》');
+    } else {
+        $self->done(err_msg => '添加失败');
+    }
 }
 1;

@@ -94,6 +94,10 @@ sub done {
     if ($data{msg}) {
         return $self->succ($data{msg}, go => $redirect_uri);
     }
+    
+    if ($data{err_msg}) {
+        return $self->fail($data{err_msg}, go => $redirect_uri);
+    }
 
     $self->redirect_to($redirect_uri);
 }
