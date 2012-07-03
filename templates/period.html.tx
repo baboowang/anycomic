@@ -3,7 +3,7 @@
 <h1 id="nav">
     <a href="/" title="返回首页">有本漫画</a>&nbsp;&gt;&nbsp;<: book($period.book) :>&nbsp;&gt;&nbsp;<: $period.name :>
     &nbsp;&nbsp;&nbsp;
-    <label style="font-size:12px;font-weight:normal;background:green;color:white;padding:3px" target="_blank">图片保存目录：
+    <label style="font-size:12px;font-weight:normal;color:#ccc;padding:3px" target="_blank">图片保存目录：
         <: $period.data_dir :>
     </label>
 </h1>

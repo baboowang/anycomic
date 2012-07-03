@@ -24,7 +24,11 @@
                         </strong>
                         <i></i>
                     </span>
+                    : if $c.in_shelf($book) {
                     <a href="#" onclick="remove_from_shelf('<: $book.id :>', this, event)" title="从书架移除" class="remove"><i>移除</i><b></b></a>
+                    : } else { 
+                    <a href="#" onclick="add_to_shelf('<: $book.id :>', this, event)" title="添加到我的书架" class="add"><i>添加</i><b></b></a>
+                    : }
                 </li>
         : if $~book % $shelf_x_size == ($shelf_x_size - 1) || $~book.is_last {
             </ul>

@@ -46,27 +46,6 @@ sub refresh {
     $self->ajax_result($res->{book}->refresh);
 }
 
-sub remove {
-    my $self = shift;
-    my $anycomic = $self->anycomic;
-    my $id = trim($self->param('id'));
-    my $res;
-    
-    my $rs = $anycomic->get_schema->resultset('Shelf');
-    my $row = $rs->find($id);
-
-    unless ($row) {
-        return $self->fail('漫画不存在', go => '/');
-    }
-
-    my $book = $anycomic->get_book($id);
-    $book->site->remove_book($book);
-
-    $row->delete;
-
-    $self->succ('漫画《' . $book->name . '》移出书架 ', go => '/');
-}
-
 sub add {
     my $self = shift;
     my $anycomic = $self->anycomic;
@@ -96,5 +75,36 @@ sub add {
     } else {
         $self->done(err_msg => '添加失败');
     }
+}
+
+sub suggest {
+    my $self = shift;
+    my $anycomic = $self->anycomic;
+    my $keyword = $self->param('kw'); 
+
+    my $res = {};
+
+    if ($keyword) {
+        $res->{word} = $keyword;
+        $res->{result} = [];
+
+        my @books = $anycomic->get_schema->resultset('Book')->search({
+            name => { like => '%' . $keyword . '%' },
+        }, {
+            order_by => { -desc => 'update_time' },
+            rows => 10,
+        });
+
+        for my $book (@books) {
+            push @{$res->{result}}, {
+                id => $book->id,
+                name => $book->name,
+                site_name => $book->site->name,
+                url => $book->url,
+            };
+        }
+    }
+
+    $self->render_json($res);
 }
 1;

@@ -236,7 +236,7 @@ button.sid-btn-disable{color:#ccc}
 #period #left{width:100%}
 #book-imgs{background:#000;padding-bottom:20px}
 div.img{width:100%;padding:25px 0;_height:130px;min-height:130px;text-align:center;background:url(../img/pic-loading.gif) no-repeat center center;position:relative}
-div.img i{position:absolute;display:block;left:5px;top:25px;width:50px;height:50px;background:#999;font-size:40px;line-height:50px;color:#000;font-weight:bolder;opacity:0.7;filter:alpha(opacity=70)}
+div.img i{position:absolute;display:block;left:5px;top:25px;width:50px;height:50px;background:#999;font-size:40px;line-height:50px;color:#000;font-weight:bolder;opacity:0.7;filter:alpha(opacity=70);-moz-border-radius:3px;-webkit-border-radius:3px;}
 div.img a.rl{position:absolute;padding:3px 5px;background:red;color:#fff;left:60px;top:30px;}
 p#nexts, p#period-guide{text-align:center;line-height:40px;font-size:30px;}
 p#nexts a, p#period-guide a{font-weight:bold;color:#ccc;}

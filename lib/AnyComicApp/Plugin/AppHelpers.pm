@@ -21,8 +21,9 @@ sub register {
 
     $app->helper(in_shelf => sub {
         my ($self, $book) = @_;
-
-        return 1;
+        
+        return $self->anycomic->get_schema->resultset('Shelf')
+            ->count({ book_id => $book->id });
     });
     
     $app->helper(page_batch_count => sub {

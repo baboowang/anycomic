@@ -14,7 +14,7 @@
                 <: if $c.in_shelf($book) { :>
                 <span class="add-done">[ 已添加进我的书架 ]</span>
                 <: } else { :>
-                <a href="#" onclick="add_to_shelf('', this, event, function(e){$(e).replaceWith('<span class=\'add-done\'>[ 已添加进我的书架 ]</span>')})" title="添加到我的书架" class="add">[ 添加到我的书架 ]</a>
+                <a href="#" onclick="add_to_shelf('<: $book.id :>', this, event, function(e){$(e).replaceWith('<span class=\'add-done\'>[ 已添加进我的书架 ]</span>')})" title="添加到我的书架" class="add">[ 添加到我的书架 ]</a>
                 <: } :>
             </td>
             <td valign="top">

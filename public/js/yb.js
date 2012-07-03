@@ -93,7 +93,7 @@ page_inits['index'] = function(){
     window.remove_from_shelf = function(id, elem, event) {
         event = $.event.fix(event);
         event.preventDefault();
-        $.get('/book/remove?id=' + id, function(ret) {
+        $.get('/shelf/remove?id=' + id, function(ret) {
             if (ret && ret.code == 0) {
                 popup_msg(ret.msg, 'succ');
                 load_shelf(cur_url, 0);
@@ -167,26 +167,21 @@ page_inits['index'] = function(){
         });
     });
     
-    /*
     $(window).suggest({
         $input : $('#search input'),
         $show : $('#suggest-cnt .suggest-items'),
-        url : '/comic/suggest?kw={0}&r=' +  Math.ceil(+ new Date / (1000 * 3600 * 24)),
+        url : '/book/suggest?kw={0}&r=' +  Math.ceil(+ new Date / (1000 * 3600 * 24)),
         //useJson : true,
-        onPressEnter : function (event, input) {
-           // event.preventDefault();
-        },
         hideDelay : 0.5,
         delay : 0.1,
-        valueField : 'show_name',
+        valueField : 'name',
         process: function (o) {
             return '<div class="suggest-item"><span>'
-            + o.show_name + '</span>'
-            + (o.name ? '<span class="alias">' + o.name + '</span>' : '')
+            + o.name + '</span>'
+            + '<span class="alias">' + o.site_name + '</span>'
             + '</div>';
         }
     });
-    */ 
 
     var intro_show_delay = 1000, intro_show_timer = null;
     $('.book').live('mouseenter', function(){
@@ -452,9 +447,9 @@ function add_to_shelf(id, elem, event, cb)
     }
     
     $elem.removeClass('add').addClass('add-done');
-    $.get('/shelf/addBook/' + id + '?r=' + Math.random(), function(ret){
-        if (ret.indexOf('ok') == -1) {
-            alert(ret);
+    $.get('/shelf/add?id=' + id + '&r=' + Math.random(), function(ret){
+        if (! ret || ret.code != 0) {
+            popup_msg(ret ? ret.msg : '服务器错误');
         } else {
             cb && cb(elem);
         }

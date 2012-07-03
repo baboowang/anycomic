@@ -7,9 +7,10 @@ use utf8;
 use constant {
     ERR_BOOK_URL => '书链接无法识别',
     ERR_PERIOD_URL => '话链接无法识别',
+    ERR_BOOK_ID => '错误的书ID',
 };
 
-our @EXPORT = qw/cutstr trim jsstr ERR_BOOK_URL ERR_PERIOD_URL/;
+our @EXPORT = qw/cutstr trim jsstr ERR_BOOK_URL ERR_PERIOD_URL ERR_BOOK_ID/;
 
 sub cutstr {
     my ($str, $len) = @_;
