@@ -4,10 +4,9 @@ use AnyComicApp::Controller;
 use AnyComicApp::Utils;
 use Text::Xslate::Util qw/mark_raw/;
 use AnyComic;
+use AnyComic::Version;
 use Modern::Perl;
 use utf8;
-
-our $VERSION = "0.1.1";
 
 # This method will run once at server start
 sub startup {
@@ -65,5 +64,7 @@ sub startup {
     # Normal route to controller
 #    $r->route('/:template', template => ['about', 'download', 'query']);
     $r->route('/:controller/:action')->to(controller => 'index', action => 'index');
+
+    check_database_update($anycomic->get_schema->storage->dbh);
 }
 1;

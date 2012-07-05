@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 require 5.12.0;
 
+use lib 'lib';
+use AnyComic::Version;
+
 sub setup {
     use File::Copy;
 
@@ -8,18 +11,16 @@ sub setup {
 
     # 1. Install dependencies
     my @modules = qw/Mojolicious MojoX::Renderer::Xslate Modern::Perl DBIx::Class Encode::Locale/;
-
-    if ($^O ~~ /Win32/i && system('ppm help > NUL 2>&1') == 0) {
-        system("ppm install $_") for @modules; 
-    } else {
-        system("cpan $_") for @modules;
-    }
+    install_modules(@modules);
 
     # 2. Install database
     move('database/anycomic.db.bak', 'database/anycomic.db') unless -e 'database/anycomic.db'; 
 
     # 3. Create log directory
     mkdir('log') unless -d 'log';
+
+    update_module_version('updates/.version');
+    update_module_version('database/.version');
 }
 
 sub start {
@@ -34,5 +35,7 @@ if ( ! -f 'database/anycomic.db' or ($ARGV[0] && $ARGV[0] eq 'setup') ) {
     
     print "\n\nStart...\n";
 }
+
+check_module_update;
 
 start;

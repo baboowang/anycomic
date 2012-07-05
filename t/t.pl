@@ -22,6 +22,7 @@ use Cwd 'abs_path';
 use utf8;
 use YAML::XS qw/Dump LoadFile/;
 
+exit;
 my $c = LoadFile('config/sites/bengou.yml');
 
 my $base = AnyComic::Base->new;
@@ -33,6 +34,9 @@ for my $prop (keys %{$c->{book}{props}}) {
     say "$prop: $prop_value";
 }
 exit;
+sub a {
+    eval 'use NOTEXISTS;1';
+}
 my $s1 = q#setting.chapterInfo={"bookId":584,"bookName":"美食的俘虏","chapterId":54679,"chapterName":"142话","images":["imanhua_001_103130359.png","imanhua_002_103130375.png","imanhua_003_103130390.png","imanhua_004_103130406.png","imanhua_005_103130406.png","imanhua_006_103130406.png","imanhua_007_103130421.png","imanhua_008_103130421.png","imanhua_009_103130421.png","imanhua_010_103130437.png","imanhua_011_103130437.png","imanhua_012_103130437.png","imanhua_013_103130437.png","imanhua_014_103130453.png","imanhua_015_103130453.png","imanhua_016_103130453.png","imanhua_017_103130453.png","imanhua_018_103130484.png","imanhua_019_103130500.png"],"count":19};;imanhua.core.bind();#;
 
 my $s = q#eval(function(p,a,c,k,e,d){e=function(c){return c};if(!''.replace(/^/,String)){while(c--)d[c]=k[c]||c;k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('11.10={"9":12,"15":"14","13":8,"2":"3","1":["4.0","7.0","6.0","5.0","16.0","27.0","26.0","25.0","28.0","31.0","30.0","29.0","20.0","19.0","17.0","21.0","24.0","23.0"],"22":18};',10,32,'png|images|chapterName|189话|imanhua_001|imanhua_004|imanhua_003|imanhua_002|68660|bookId|chapterInfo|setting|584|chapterId|美食的俘虏|bookName|imanhua_005|imanhua_015||imanhua_014|imanhua_013|imanhua_016|count|imanhua_018|imanhua_017|imanhua_008|imanhua_007|imanhua_006|imanhua_009|imanhua_012|imanhua_011|imanhua_010'.split('|'),0,{}));imanhua.core.bind();#;
