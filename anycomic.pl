@@ -16,8 +16,10 @@ sub setup {
     # 2. Install database
     move('database/anycomic.db.bak', 'database/anycomic.db') unless -e 'database/anycomic.db'; 
 
-    # 3. Create log directory
+    # 3. Create directories
     mkdir('log') unless -d 'log';
+    mkdir('updates') unless -d 'updates';
+    
 
     update_module_version('updates/.version');
     update_module_version('database/.version');
