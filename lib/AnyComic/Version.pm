@@ -8,7 +8,7 @@ use Exporter 'import';
 
 our $VERSION = "0.1.2";
 
-our @EXPORT = qw/install_modules check_module_update check_database_update/;
+our @EXPORT = qw/install_modules check_module_update check_database_update update_module_version/;
 
 my $default_version = '0.1.1';
 
