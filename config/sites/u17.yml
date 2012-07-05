@@ -2,28 +2,31 @@ name : 有妖气
 domain : u17.com
 version : 20120613
 book :
-    periods : 'div.comic_chapter_middle > div:first-child > ul a'
+    periods : '#chapterlist ul.cf a'
     period_order : asc
     period_name :
         - processor : attr title
-    name : 'div.address a:last-child'
+    name : 
+        - selector : '#workinfo h1'
+        - processor : text
+        - regexp : '^\s*(\S+)'
     rule : '/comic/\d+\.html'
     props :
-        cover : 'dt.comic_cover img'
-        author : 'dd.comic_info a[href*=i.u17.com]:eq(0)'
+        cover : '#workinfo div.cover img'
+        author : '#workinfo a[href*=i.u17.com]:eq(0)'
         status : 
-            - selector : 'dd.comic_info .comic_type'
+            - selector : '#workinfo div.comic'
             - processor : text
-            - regexp : '状态：(\S+)'
+            - regexp : '状态：\s*(\S+)'
         cates :
-            - selector : 'dd.comic_info .comic_type'
+            - selector : '#workinfo div.comic'
             - processor : text
-            - regexp : '类别：(\S+)'
+            - regexp : '类别：\s*(\S+)'
         update_time : 
-            - selector : 'div.comic_chapter_top'
+            - selector : '#chapterlist > p:last-child'
             - processor : text
-            - regexp : '最后更新时间：([\d-]+)'
-        intro : '#comic_description_panel'    
+            - regexp : '最后更新时间：\s*([\d-]+)'
+        intro : '#workinfo div.intro'    
 period :
     rule : '/comic_show/(?<period_id>c\d+_m\d+)(?:_i\d+)?\.html' 
     pages :

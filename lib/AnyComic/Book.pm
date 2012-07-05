@@ -108,6 +108,30 @@ sub parse {
     $self->log->debug(qq{下载页面完成：$url_name});
 
     my $err = '';
+
+    for my $prop ('name', 'author', 'intro', 'area', 'cates', 'update_time', 'status', 'cover') {
+        my $prop_filters = $config->{book}{$prop} || $config->{book}{props}{$prop};
+        next unless $prop_filters;
+        my $err;
+        my $res = $self->_filter($resp->dom, $prop_filters, $err);
+        if ($res) {
+            if (ref $res eq 'Mojo::DOM') {
+                if ($res->type eq 'img') {
+                    $res = $res->attrs('src');
+                } else {
+                    $res = $res->all_text;
+                }
+            }
+            $self->$prop($res);
+            say "$prop $res";
+            if (ref $self->$prop && $self->$prop->can('save')) {
+                $self->$prop->save();
+            }
+        } else {
+            $self->log->warn(qq{分析Book属性${prop}错误：${err}});
+        }
+    }
+
     my @res = $self->_filter($resp->dom, $config->{book}{periods}, $err);
     
     if ($err) {
@@ -119,6 +143,8 @@ sub parse {
     $self->{_periods_map} = {};
 
     my $period_no = scalar @res;
+    my $book_name_prefix = '^' . $self->name . '[/\\ -_]*';
+
     for my $item (@res) {
         my ($period_name, $period_url);
 
@@ -146,7 +172,8 @@ sub parse {
         }
 
         $period_url = $self->_abs_url($self->url, $period_url);
-
+         
+        $period_name =~ s/$book_name_prefix//;
         my $period = AnyComic::Period->new({
             name => $period_name,
             url => "$period_url", 
@@ -166,29 +193,7 @@ sub parse {
 
     $self->periods(\@periods);
 
-    for my $prop ('name', 'author', 'intro', 'area', 'cates', 'update_time', 'status', 'cover') {
-        my $prop_filters = $config->{book}{$prop} || $config->{book}{props}{$prop};
-        next unless $prop_filters;
-        my $err;
-        my $res = $self->_filter($resp->dom, $prop_filters, $err);
-        if ($res) {
-            if (ref $res eq 'Mojo::DOM') {
-                if ($res->type eq 'img') {
-                    $res = $res->attrs('src');
-                } else {
-                    $res = $res->all_text;
-                }
-            }
-            $self->$prop($res);
-
-            if (ref $self->$prop && $self->$prop->can('save')) {
-                $self->$prop->save();
-            }
-        } else {
-            $self->log->warn(qq{分析Book属性${prop}错误：${err}});
-        }
-    }
-    
+        
     $self->save();
     $self->parsed(1);
 
