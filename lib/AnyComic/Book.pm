@@ -123,7 +123,6 @@ sub parse {
                 }
             }
             $self->$prop($res);
-            say "$prop $res";
             if (ref $self->$prop && $self->$prop->can('save')) {
                 $self->$prop->save();
             }
@@ -143,7 +142,7 @@ sub parse {
     $self->{_periods_map} = {};
 
     my $period_no = scalar @res;
-    my $book_name_prefix = '^' . $self->name . '[/\\ -_]*';
+    my $book_name_prefix = '^' . $self->name . '[/\\ _-]*';
 
     for my $item (@res) {
         my ($period_name, $period_url);
