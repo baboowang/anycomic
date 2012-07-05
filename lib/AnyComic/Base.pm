@@ -4,6 +4,7 @@ use Mojo::Log;
 use Mojo::UserAgent;
 use Mojo::Message::Response;
 use Mojo::Util qw/encode decode/;
+use Mojo::Collection;
 use Compress::Zlib;
 use Digest::MD5 'md5_hex';
 use AnyComic;
@@ -211,29 +212,46 @@ sub _filter {
                         return;
                     }
                     
-                    #扩展  :eq(index) 的选择器，不过只能在选择器的末尾使用
-                    my $index_filter = -1;
-                    if ($filter_value ~~ /:eq\((\d+)\)$/) {
-                        $index_filter = $1;
-                        $filter_value =~ s/:eq.+$//;
+                    #扩展选择器 :eq(index) :contains(all_text包含的字符中) 
+                    my @selectors = split /(:eq\(\d+\)|:contains\([^\)]+\))/, $filter_value;
+
+                    my @elems = ($_); 
+                        
+                    for my $selector (@selectors) {
+                        last unless @elems;
+
+                        my @new_elems = ();
+
+                        given ($selector) {
+                            when (/:eq\((\d+)\)/) {
+                                push @new_elems, $elems[$1] if @elems > $1;          
+                            }
+
+                            when (/:contains\((.+)\)/) {
+                                my $match_text = $1;
+                                for my $elem (@elems) {
+                                    push @new_elems, $elem if $processor->text($elem) ~~ qr/$match_text/i; 
+                                }
+                            }
+
+                            default {
+                                for my $elem (@elems) {
+                                    $elem->find($selector)->each(sub{
+                                        push @new_elems, shift;  
+                                    });
+                                }
+                            }
+                        }
+
+                        @elems = @new_elems;
                     }
 
-                    my $elems = $_->find($filter_value);
-                    
-                    unless ($elems && $elems->size) {
+                    unless (@elems) {
                         $$err = qq{selector未筛选到结果：$filter_value};
                         return;
                     }
-
-                    if ($index_filter >= 0) {
-                        if ($elems->size > $index_filter) {
-                            push @new_res, $elems->[$index_filter]; 
-                        }
-                    } else {
-                        $elems->each(sub {
-                            push @new_res, shift;
-                        });
-                    }
+                    
+                    @new_res = @elems;
                 }
             }
             when ('regexp') {

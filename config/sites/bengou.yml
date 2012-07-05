@@ -19,25 +19,15 @@ book :
     props :
         cover : 'div.section div.recommendedpic img'
         author : 
-            - selector : 'div.sectioninfo > p'
-            - processor : 'filter 作.*者'  
-            - selector : 'a'
+            - selector : 'div.sectioninfo > p:contains(作.*者) a'
         status : 
-            - selector : 'div.sectioninfo > p'
-            - processor : 'filter 状态'
-            - selector : 'a'
+            - selector : 'div.sectioninfo > p:contains(状态) a'
         cates : 
-            - selector : 'div.sectioninfo > p'
-            - processor : 'filter 类型'
-            - selector : 'a'
+            - selector : 'div.sectioninfo > p:contains(类型) a'
         area : 
-            - selector : 'div.sectioninfo > p'
-            - processor : 'filter 区域'
-            - selector : 'a'
+            - selector : 'div.sectioninfo > p:contains(区域) a'
         update_time : 
-            - selector : 'div.sectioninfo > p'
-            - processor : 'filter 更新时间'
-            - selector : span
+            - selector : 'div.sectioninfo > p:contains(更新时间) span'
             - processor : text
             - script : |
                 my ($year, $month, $day) = $_ =~ /(\d+)年(\d+)月(\d+)日/; 
