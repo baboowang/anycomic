@@ -63,6 +63,7 @@ sub startup {
 
     # Normal route to controller
 #    $r->route('/:template', template => ['about', 'download', 'query']);
+    $r->route('/:template', template => ['faq']);
     $r->route('/:controller/:action')->to(controller => 'index', action => 'index');
 
     check_database_update($anycomic->get_schema->storage->dbh);

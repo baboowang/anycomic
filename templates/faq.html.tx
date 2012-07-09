@@ -1,0 +1,46 @@
+: cascade layout::default with common { page_id => 'faq', cur_nav => 'faq'}
+: around content -> {
+<style>
+#faq h2, #faq h3 {font-weight:bold;color:#000;font-size:14px;margin:10px}
+#faq h2 {font-size:18px;color:green}
+#faqs li pre{padding-left:2em;line-height:1.8em} 
+</style>
+<h2>常见问题</h2>
+<ul id="faqs">
+<li>
+<h3 id="comic_url">什么是漫画地址</h3>
+<pre>
+漫画地址就是漫画站中，查看一本漫画详细信息的页面，包含了漫画的封面，简介及漫画的所有话/期。
+例如<a href="http://imanhua.com" target="_blank">爱漫画</a>站点的海贼王的漫画地址：<a href="http://imanhua.com/comic/55/" target="_blank">http://imanhua.com/comic/55/</a>
+</pre>
+</li>
+
+<li>
+<h3 id="err_add_comic">为什么添加不了漫画？</h3>
+<pre>
+1. 添加的漫画地址是否在支持的网站之中
+2. 当前网络环境访问目标漫画站是否顺畅。
+3. 是否有错误提示信息？如果不明白错误信息的含义可以到论坛的问题版本发帖求助。
+4. 可以把安装目录下的log目录下的文件压缩发送至 ybmanhua@gmail.com 。
+</pre>
+</li>
+
+<li>
+<h3 id="not_network">有本漫画可以在无网环境下使用么？</h3>
+<pre>
+可以，但是在无网络环境下，不能添加漫画。
+已添加过的漫画，也只能阅读曾经看过的话/期。
+</pre>
+</li>
+
+<li>
+<h3 id="comic_sites">可以支持其它的漫画站点么？</h3>
+<pre>
+完全可以，这也是有本漫画设计的一个核心功能。
+但是需要为每个漫画站写一个配置文件。
+默认支持的3个漫画站的配置文件可以在 config/sites/ 目录下找到它们的配置文件。
+添加新的配置文件需要懂一定的技术。可以到论坛发帖求助看看，说不定作者或其它大神会帮你写一个。
+</pre>
+</li>
+</ul>
+: }

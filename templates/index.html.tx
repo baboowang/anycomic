@@ -1,4 +1,4 @@
-: cascade layout::default with common
+: cascade layout::default with common { cur_nav => 'home' }
 : around content -> {
 <div id="left">
     <ul id="tabs">
@@ -14,7 +14,7 @@
     <div id="no-books">
         <strong>你的书架中还没有存放任何的漫画，您可以通过以下方式将喜爱的漫画添加进来：</strong>
         <ul>
-            <li>点击此处快速添加一个漫画</li>
+            <li><a href="javascript:;" onclick="$('#add_comic_link').trigger('click')">点击此处添加第一本漫画</a></li>
         </ul>
         <p class="help">操作提示：点击漫画左上角的"＋"或"－"号，可以将漫画添加进书架或移除出书架。</p>
     </div>

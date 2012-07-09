@@ -18,8 +18,9 @@
         <div id="header">
             <h1 id="logo"><a href="/" title="有本漫画">有本漫画</a></h1>
             <ul id="top-nav">
-                <li><a href="/"<: $cur_nav == 'home' ? ' class="sel"' : '' :>><i class="icon i-home"></i>首页</a></li>
+                <li><a href="/"<: ($cur_nav == 'home' ? ' class="sel"' : '') | mark_raw :>><i class="icon i-home"></i>首页</a></li>
                 <li><a href="#" id="add_comic_link" style="color:red" accessKey='A' accessEvent='click' title="添加漫画(A)"><i class="icon i-di"></i>快速添加漫画</a></li>
+                <li><a href="/faq"<: ($cur_nav == 'faq' ? ' class="sel"' : '') | mark_raw :>><i class="icon i-info"></i>常见问题</a></li>
                 <li><a href="http://t.ybmanhua.com/" class="out"><i class="icon i-talk"></i>有讨论</a></li>
             </ul>
         </div>
@@ -42,6 +43,7 @@
         <form id="add-book-form" action="/book/add" method="get">
             <label for="name" style="font-weight:bold;font-size:14px;">漫画地址：</label>
             <input type="text" name="url" class="text ui-widget-content ui-corner-all" style="width:400px;height:25px"/>
+            <p style="padding:5px;color:#999;"><a href="/faq#comic_url" target="_blank">什么是漫画地址？</a></p>
             <p class="err-msg" style="color:red"></p>
         </form>
     </div>
