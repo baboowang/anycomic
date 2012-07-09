@@ -53,6 +53,9 @@ sub startup {
 
     $self->plugin('AppHelpers');
 
+    $self->plugin('AnyComicApp::Plugin::PageNavigator' => {
+    });
+
     # Default stash
     #$self->defaults();
 

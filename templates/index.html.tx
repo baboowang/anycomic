@@ -2,7 +2,7 @@
 : around content -> {
 <div id="left">
     <ul id="tabs">
-        <li<: $kw ? '' : ' class="active"' :>><a href="/" accesskey="M" title="我的书架(M)"><i class="icon i-home1"></i>我的书架</a></li>
+        <li<: ($kw ? '' : ' class="active"') | raw :>><a href="/" accesskey="M" title="我的书架(M)"><i class="icon i-home1"></i>我的书架</a></li>
         : if $kw {
         <li class="active"><a><i class="icon i-search"></i>搜索结果</a><a class="right mr10 close" href="/" title="关闭">x</a></li>
         : }

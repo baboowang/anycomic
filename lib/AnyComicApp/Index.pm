@@ -37,6 +37,7 @@ sub index {
     $data->{page} = $pager->current_page;
     $data->{total_pages} = $pager->last_page;
     $data->{kw} = $kw; 
+    $data->{pagination} = $self->page_navigator($pager->current_page, $pager->last_page); 
 
     my $books = [];
     for my $row ($rs->all) {
