@@ -32,8 +32,7 @@
             <p>
                 <a href="#header" class="right" style="color:#666"><i class="icon i-up"></i>返回页顶</a>
                 <a href="/">首页</a><i>|</i>
-                <a href="http://t.ybmanhua.com/" style="color:green" title="有本漫画讨论区">讨论区</a><i>|</i>
-                <a href="/mine/">我的书架</a><i>|</i>
+                <a href="http://t.ybmanhua.com/" style="color:green" title="有本漫画讨论区">讨论区</a>
             </p>
         </div>
         <script src="/js/yb.js?v=19"></script>
