@@ -1,5 +1,6 @@
 package AnyComicApp::Index;
 use Mojo::Base 'AnyComicApp::Controller';
+use AnyComic::Version;
 
 sub index {
     my $self = shift;
@@ -46,7 +47,7 @@ sub index {
     }
     $data->{books} = $books;
     $data->{custom_css} = $self->get_custom_shelf_style;
-
+    $data->{app_version} = $AnyComic::Version::VERSION;
     $self->stash($data);
 
     $self->render($self->is_ajax ? 'component/shelf' : 'index');

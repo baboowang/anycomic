@@ -91,6 +91,7 @@
 : }
 </div>
 <!--<a href="/shortcut" id="shortcut" title='点击右键，选择"链接另存为..."，将快捷方式保存至桌面即可'>将有本漫画网保存到桌面</a>-->
+<div style="font-size:15px;color:#eee;font-weight:bold;position:absolute;right:0;top:0;padding:5px">Version <:$app_version:></div>
 
 <script src="/js/jquery.suggest.js"></script>
 <script>
