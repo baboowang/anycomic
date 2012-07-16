@@ -13,6 +13,9 @@ sub startup {
     my $self = shift;
 
     $self->secret("Most of the time, life is boring.");
+    
+    #10 years
+    $self->sessions->default_expiration(315360000);
 
     $self->controller_class('AnyComicApp::Controller');
 

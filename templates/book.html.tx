@@ -55,7 +55,8 @@
 
 <div id="right">
     <dl class="right-box">
-        <dd style="height:200px;width:200px;border:1px solid #F3F8D7;padding:2px;border-bottom-width:3px;border-right-width:2px">
+        <dd style="height:200px;width:200px;border:1px solid #F3F8D7;padding:2px;border-bottom-width:3px;border-right-width:2px;text-align:center;line-height:200px">
+        <a href="http://www.ybmanhua.com/" target="_blank" style="font-size:150px;color:#ccc;font-weight:bold;text-decoration:none">?</a>
         </dd>
     </dl>
 </div>

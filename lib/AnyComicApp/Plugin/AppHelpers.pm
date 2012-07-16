@@ -7,7 +7,7 @@ use constant {
     MIN_SHELF_Y_SIZE => 2,
     DEFAULT_SHELF_X_SIZE => 4,
     DEFAULT_SHELF_Y_SIZE => 2,
-    DEFAULT_BATCH_COUNT => 10,
+    DEFAULT_BATCH_COUNT => 20,
     DEFAULT_WRAPPER_WIDTH => 950,
     DEFAULT_LEFT_WIDTH => 720,
     SHLEF_FLOOR_HEIGHT => 205,
@@ -32,7 +32,6 @@ sub register {
         return $self->session('batch_count') || DEFAULT_BATCH_COUNT
             unless $count;
 
-        $self->session(expires => time + 3600 * 24 * 365);
         $self->session(batch_count => $count);
     });
 
@@ -42,7 +41,6 @@ sub register {
         return $self->session('shelf_x_size') || DEFAULT_SHELF_X_SIZE
             unless $size;
 
-        $self->session(expires => time + 3600 * 24 * 365);
         $self->session(shelf_x_size => max($size, MIN_SHELF_X_SIZE));
     });
 

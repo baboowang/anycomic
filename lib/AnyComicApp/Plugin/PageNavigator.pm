@@ -47,9 +47,9 @@ sub  register{
       
       my $html = "";
       if( $actual == 1 ){
-        $html .= "<span class=\"$class\">&lt;&lt;</span>";
+        $html .= "<span class=\"$class\">&lt;</span>";
       } else {
-        $html .= "<a href=\"" . $self->url_for->query( $param => $actual - 1 ) . "\" class=\"$class\">&lt;&lt;</a>";
+        $html .= "<a href=\"" . $self->url_for->query( $param => $actual - 1 ) . "\" class=\"$class\">&lt;</a>";
       }
       foreach my $number( @ret ){
         if( $number eq ".." ){
@@ -61,9 +61,9 @@ sub  register{
         }
       }
       if( $actual == $count ){
-        $html .= "<span class=\"$class\">&gt;&gt;</span>";
+        $html .= "<span class=\"$class\">&gt;</span>";
       } else {
-        $html .= "<a href=\"" . $self->url_for->query( $param => $actual + 1 ) . "\" class=\"$class\">&gt;&gt;</a>"
+        $html .= "<a href=\"" . $self->url_for->query( $param => $actual + 1 ) . "\" class=\"$class\">&gt;</a>"
       }
       $html .= "<span style=\"clear: left; width: 1px;\">&nbsp;</span>";
       return b( $html );
