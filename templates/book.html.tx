@@ -45,7 +45,12 @@
         <dd>
             <ul id="periods">
                 : for $book.is_period_asc ? $book.periods.reverse() : $book.periods -> $period {
-                <li><: period($period) :></li>
+                <li>
+                    <: period($period) :>
+                    : if $pdf_plugin_active {
+                    &nbsp;<a href="<: pdf_url($period) :>" title="下载PDF" class="pdf" target="_blank">PDF</a>
+                    : }
+                </li>
                 : }
                 <li class="clear"></li>
             </ul>

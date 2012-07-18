@@ -26,6 +26,20 @@ sub register {
             ->count({ book_id => $book->id });
     });
     
+    $app->helper(pdf_plugin_active => sub {
+        state $is_active;
+
+        return $is_active unless $is_active ~~ undef;
+
+        eval {
+            require PDF::FromImage;
+        };
+
+        $is_active = $@ ? 0 : 1;
+
+        return $is_active;
+    });
+
     $app->helper(page_batch_count => sub {
         my ($self, $count) = @_;
 

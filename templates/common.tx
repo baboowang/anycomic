@@ -25,3 +25,7 @@
 : macro book_cover -> $book {
 : $c.image($book.cover ? $c.url_for('/image/cover').query({url => $book.url}) : '/img/default.jpg', alt => $book.name) | mark_raw
 : }
+
+: macro pdf_url -> $period {
+: $c.url_for('/pdf').query({url => $period.url}) | mark_raw
+: }

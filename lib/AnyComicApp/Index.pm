@@ -65,7 +65,10 @@ sub index {
         $data->{show_search_outside} = 0;
     }
 
-    $data->{show_search_outside} = 1 unless exists $data->{show_search_outside};
+    unless (exists $data->{show_search_outside}) {
+        $data->{show_search_outside} = $search_outside ? 0 : 1;
+    }
+
     $data->{books} = $books;
     $data->{pagesize} = $page_size;
     $data->{shelf_mid_x} = int($data->{shelf_x_size} / 2);

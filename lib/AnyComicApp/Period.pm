@@ -44,6 +44,7 @@ sub index {
         next_end => $next_end,
         prev_period => $res->{book}->prev_period($res->{period}),
         next_period => $res->{book}->next_period($res->{period}),
+        pdf_plugin_active => $self->pdf_plugin_active,
     };
     
     $self->stash(%$data, %$res);

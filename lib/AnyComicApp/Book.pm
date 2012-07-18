@@ -30,6 +30,10 @@ sub index {
         $self->stash('check_refresh', 1);    
     }
 
+    $self->stash({
+        pdf_plugin_active => $self->pdf_plugin_active,
+    });
+
     $self->stash($res)->render('book');
 }
 

@@ -6,6 +6,7 @@
     <label style="font-size:12px;font-weight:normal;color:#ccc;padding:3px" target="_blank">图片保存目录：
         <: $period.data_dir :>
     </label>
+    <a href="<: pdf_url($period) :>" title="下载PDF" style="font-size:12px;color:#F60" target="_blank">PDF</a>
 </h1>
 <p class="help">
     快捷键：
