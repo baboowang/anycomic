@@ -99,6 +99,8 @@ sub add_book {
         $book = $self->{books}[$self->{_books_map}{$key}];
     }
     
+    $book->save unless $book->_loaded; 
+
     my $res = { book => $book };
 
     if ($period_url) {
@@ -139,6 +141,8 @@ sub search {
     my $search_url = $config->{search}{rule};
     my $err;
     my $encode_keyword;
+    
+    $keyword = decode('UTF-8', $keyword) unless utf8::is_utf8($keyword);
 
     if (exists $config->{search}{keyword}) {
         unless (ref $config->{search}{keyword}) {
@@ -154,13 +158,13 @@ sub search {
     }
 
     unless ($encode_keyword) {
-        my $kw = $keyword;
+        my $charset = 'utf8';
         if (ref $config->{search}{keyword} eq 'HASH' 
             && exists $config->{search}{keyword}{charset}
         ) {
-            $kw = encode $config->{search}{keyword}{charset}, $kw; 
+            $charset = $config->{search}{keyword}{charset};
         }
-        $encode_keyword = url_escape $kw;
+        $encode_keyword = url_escape(encode($charset, $keyword));
     }
 
     $search_url =~ s/\{keyword\}/$encode_keyword/g;
@@ -180,39 +184,50 @@ sub search {
     }
 
     my $result = [];
+    my %url_map = ();
     for my $item (@items) {
         my $item_info = {};
         
-        for my $prop_name ('name', 'author', 'last_update_period', 'url') {
-            if (exists $config->{search}{props}{$prop_name}) {
-                my $prop_filter = $config->{search}{props}{$prop_name};
-                my $prop = $self->_filter($item, $prop_filter, $err);
+        for my $prop_name (keys %{$config->{search}{props}}) {
+            my $prop_filter = $config->{search}{props}{$prop_name};
+            my $prop = $self->_filter($item, $prop_filter, $err);
 
-                if ($err) {
-                    $self->log->error(qq{$site_name 搜索匹配属性 $prop_name 失败：$err});
-                    continue;
-                }
-                
-                my $prop_value = $prop;
-                if (ref $prop eq 'Mojo::DOM') {
-                    if ($prop->type eq 'img') {
-                        $prop_value = $prop->attrs('src');
-                    } elsif ($prop_name =~ /url/ && $prop->type eq 'a') {
-                        $prop_value = $self->_abs_url($search_url, $prop->attrs('href')); 
-                    } else {
-                        $prop_value = $prop->all_text;
-                    }
-                }
-
-                $item_info->{$prop_name} = $prop_value;
+            if ($err) {
+                $self->log->error(qq{$site_name 搜索匹配属性 $prop_name 失败：$err});
+                next;
             }
+            
+            my $prop_value = $prop;
+            if (ref $prop eq 'Mojo::DOM') {
+                if ($prop->type eq 'img') {
+                    $prop_value = $prop->attrs('src');
+                } elsif ($prop_name =~ /url/ && $prop->type eq 'a') {
+                    $prop_value = $self->_abs_url($search_url, $prop->attrs('href')); 
+                } else {
+                    $prop_value = $prop->all_text;
+                }
+            }
+
+            $item_info->{$prop_name} = $prop_value;
         }
 
         if (%$item_info) {
-            $item_info->{site} = $self;
-            my $book = AnyComic::Book->new($item_info);
-            weaken($book->{site});
-            push @$result, $book;
+
+            #去重
+            if (exists $url_map{$item_info->{url}}) {
+                next;
+            }
+            $url_map{$item_info->{url}} = 1;
+
+            my $res = $self->add_book($item_info->{url});
+            if ($res) {
+                my $book = $res->{book};
+                for my $prop (keys %$item_info) {
+                    next unless $book->can($prop);
+                    $book->$prop($item_info->{$prop}) unless $book->$prop;
+                }
+                push @$result, $book;
+            }
         }
     }
 

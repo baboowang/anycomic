@@ -52,10 +52,10 @@ sub load {
                 }
             }
             $self->_on_load($row);
+
+            $self->_loaded(1);
         }
     }
-
-    $self->_loaded(1);
 
     return 1;
 }
@@ -86,8 +86,12 @@ sub save {
     }
 
     return unless $self->_on_save($data);
+    
+    my $ret = $schema->resultset($table)->update_or_create($data, { key => 'primary' });
 
-    return $schema->resultset($table)->update_or_create($data, { key => 'primary' });
+    $self->_loaded(1) if $ret;
+
+    return $ret;
 }
 
 sub _on_save { 1 }
@@ -146,7 +150,9 @@ sub _request_url {
     }
 
     if ($res->content->charset) {
-        $content = decode 'UTF-8', $content;    
+        my $charset = $res->content->charset;
+        $charset = 'gbk' if $charset ~~ /gb2312/i;
+        $content = decode $charset, $content;    
     } elsif (not $is_img) {
         my ($charset) = $content =~ /<meta[^>]+charset=([\w-]+)/i;  
         $charset = 'gbk' if $charset ~~ /gb2312/i;

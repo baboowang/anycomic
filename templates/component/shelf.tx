@@ -19,10 +19,41 @@
                             <a href="<: period_url($book.latest_period) :>" class="period" target="_blank">
                                 <: $book.latest_period.name :>
                             </a>
+                            : } else if ($book.last_update_period) {
+                            <a class="period" href="javascript:;"><: $book.last_update_period :></a>
                             : }
                         </strong>
                         <i></i>
                     </span>
+
+                    <div style="display:none" class="<: $~book % $shelf_x_size < $shelf_mid_x ? 'intro in_left' : 'intro in_right' :>">
+                        <p>
+                            <strong>
+                                <: $book.name :>
+                                <em>来源：<: $book.site.name :></em>
+                            </strong>
+                            
+                            : if $book.intro {
+                            : $book.intro | cutstr(200)
+                            : }
+
+                            : if $book.author {
+                                <label>漫画作者：<: $book.author :>
+                                <: if $book.cates { :><i>漫画类型：<: $book.cates :></i><: } :>
+                            </label>
+                            : }
+
+                            : if $book.status {
+                                <label>连载情况：<: $book.status :>
+                                : if $book.update_time {
+                                <i>更新时间：<: $book.update_time :></i>
+                                : }
+                                </label>
+                            : }
+                        </p>
+                        <b></b>
+                    </div>
+
                     : if $c.in_shelf($book) {
                     <a href="#" onclick="remove_from_shelf('<: $book.id :>', this, event)" title="从书架移除" class="remove"><i>移除</i><b></b></a>
                     : } else { 
@@ -53,3 +84,15 @@
     <div class="pages-wrapper"><div class="pages"><: $pagination | raw :></div></div>
     : }
 </div>
+
+: if $kw && $show_search_outside {
+<script>
+$(function(){
+    setTimeout(function(){
+        popup_msg('外部漫画搜索中...', 'info');
+        var url = location.href + '&outside=1';
+        $(window).trigger('load_shelf', url); 
+    }, 0);
+});
+</script>
+: }

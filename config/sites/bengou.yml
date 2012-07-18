@@ -9,6 +9,7 @@ search :
     items : 'div.endcomicscontent > ul > li'
     props :
         name : 'h1 a:first-child'
+        cover : 'div.recommendedpic img'
         url : 'h1 a:first-child'
         last_update_period : 'h1 a:last-child'
         author : 'p:first-of-type a:first-child'

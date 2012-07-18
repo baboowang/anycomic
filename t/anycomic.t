@@ -7,24 +7,26 @@ use AnyComic;
 use AnyComic::Site;
 use AnyComic::Book;
 use AnyComic::Period;
+use Mojo::Util qw/encode decode url_escape/;
 use utf8;
 use open ':utf8', ':std';
 
 my $app = AnyComic->new(home_dir => $FindBin::Bin . '/..');
 
-=dis
-my $site = $app->get_site('bengou.com');
+#my $site = $app->get_site('bengou.com');
+my $site = $app->get_site('imanhua.com');
 
 if (my $result = $site->search('海贼')) {
     for my $item (@$result) {
-        say $item->{name};
+        say $item->name;
+        say $item->cover;
         say $item->{author};
         say $item->{last_update_period};
         say $item->{url};
         say '-' x 80;
     }
 }
-=cut
+exit;
 #    url  => 'http://www.bengou.com/080819/hzw0008081910/index.html',
 #    url  => 'http://www.bengou.com/080819/hzw0008081910/1337784973603/1337784973603.html',
 

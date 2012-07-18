@@ -220,7 +220,7 @@ sub find_period {
 sub latest_period {
     my $self = shift;
 
-    return undef unless @{$self->{periods}};
+    return undef unless @{$self->periods};
 
     my $period_index = $self->is_period_asc ? $#{$self->{periods}} : 0;
     my $period = $self->{periods}->[$period_index];

@@ -45,11 +45,11 @@ page_inits['index'] = function(){
     }
     
     var is_loading = false;
-    function load_shelf(url, direction)
+    function load_shelf(url, direction, silent)
     {
         if (is_loading) return;
         is_loading = true;
-        show_loading();
+        silent || show_loading();
         $('#shelfs .pages').hide();
         var shelf_height = $('#shelfs .shelf:first').prop('offsetHeight');
         url += (url.indexOf('?') > -1 ? '&' : '?')
@@ -59,7 +59,8 @@ page_inits['index'] = function(){
             if (direction == 0) {
                 $shelfs.first().remove();
                 is_loading = false;
-                hide_loading();
+                silent || hide_loading();
+                hide_popup_msg();
                 $(window).triggerHandler('shelf_load');
                 return;
             }
@@ -134,6 +135,10 @@ page_inits['index'] = function(){
         $('#shelfs .pages').show('fast');
     }).triggerHandler('shelf_load');
     
+    $(window).bind('load_shelf', function(event, url){
+        load_shelf(url, 0, 1);
+    });
+
     $('#search input').keydown(function(event){
         event.stopPropagation();
         if (event.which == 13) {
@@ -447,10 +452,13 @@ function add_to_shelf(id, elem, event, cb)
     }
     
     $elem.removeClass('add').addClass('add-done');
+    popup_msg('书本添加中...', 'info');
+
     $.get('/shelf/add?id=' + id + '&r=' + Math.random(), function(ret){
         if (! ret || ret.code != 0) {
             popup_msg(ret ? ret.msg : '服务器错误');
         } else {
+            popup_msg(ret.msg || '添加书本成功', 'succ');
             cb && cb(elem);
         }
     });
@@ -466,7 +474,7 @@ if (top != window) {
 }
 
 //顶部弹出消息
-$(function(){
+(function(){
     var $popup_msg = $('#popup-msg'), hideTimer = null, hideInterval = 10000,
     minShowTime = 500, startTime = 0;
     function popup_msg(msg, type)
@@ -495,7 +503,7 @@ $(function(){
     }
     window.popup_msg = popup_msg;
     window.hide_popup_msg = hide_msg;
-}); 
+})(); 
 
 //添加漫画弹出
 $(function(){

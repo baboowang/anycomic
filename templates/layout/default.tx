@@ -35,7 +35,6 @@
                 <a href="http://t.ybmanhua.com/" style="color:green" title="有本漫画讨论区">讨论区</a>
             </p>
         </div>
-        <script src="/js/yb.js?v=19"></script>
     </div>
 
     <div id="dialog-add-comic" style="display:none;padding:20px">
@@ -47,6 +46,9 @@
         </form>
     </div>
     <div id="popup-msg" style="display:none"></div>
+
+    <script src="/js/yb.js?v=20"></script>
+
     : if $__msg && $__msg.msg {
     <script>
     $(function(){

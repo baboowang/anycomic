@@ -1,6 +1,20 @@
 name : 爱漫画
 version : 20120613
 domain : imanhua.com
+search :
+    rule : 'http://imanhua.com/v2/user/search.aspx?key={keyword}' 
+    keyword :
+        charset : gbk
+    items : 'div.bookChrList li' 
+    props :
+        name : 'div.intro h2 a'
+        url : 'div.intro h2 a'
+        last_update_period : 'div.intro > em:contains(最新) a'
+        update_time : 'div.intro > em:contains(最近更新) abbr'
+        author : 
+            - selector : 'div.intro > em:contains(作者)' 
+            - regexp : '作者：([^<>\s]+)' 
+        cover : 'div.cover img'
 book :
     name : 'h1'
     rule : '/comic/(?<book_id>\d+)/?$'
