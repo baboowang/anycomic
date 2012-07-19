@@ -55,7 +55,7 @@ a.op{color:green}
 .i-up{background-position:-301px -4px}
 .i-di{background-position:-195px -39px}
 .i-new-talk{background-position:-195px -74px}
-a.pdf{font-size:10px;color:#f60}
+a.pdf{font-size:9px;color:#f60;-webkit-text-size-adjust:none}
 
 #popup-msg{line-height:30px;padding:0 1em;font-size:13px;font-weight:bold;background:#FFFACD;position:fixed !important;position:absolute;top:0px;_top:expression(eval(document.documentElement.scrollTop)); -moz-border-radius:0 0 3px 3px;-webkit-border-radius:0 0 3px 3px;z-index:10000}
 #popup-msg.info{background:#fffacd;color:#000}
