@@ -21,6 +21,6 @@
 use lib '../../lib';
 use AnyComic::Version;
 
-my @modules = qw/PDF::FromImage/;
+my @modules = qw/PDF::API2/;
 
 install_modules(@modules);

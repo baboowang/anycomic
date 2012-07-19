@@ -32,7 +32,7 @@ sub register {
         return $is_active unless $is_active ~~ undef;
 
         eval {
-            require PDF::FromImage;
+            require PDF::API2::Lite;
         };
 
         $is_active = $@ ? 0 : 1;

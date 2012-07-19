@@ -1,6 +1,6 @@
 package AnyComicApp::Pdf;
 use Mojo::Base 'AnyComicApp::Controller';
-use PDF::FromImage;
+use PDF::API2::Lite;
 use IO::Scalar;
 use Mojo::Util qw/encode decode/;
 use utf8;
@@ -23,7 +23,7 @@ sub index {
 
     $self->render_later;
 
-    my $pdf = PDF::FromImage->new;
+    my $pdf = PDF::API2::Lite->new;
     
     my @images = ();
     for my $page (@{$period->pages}) {
@@ -32,15 +32,20 @@ sub index {
             return;
         }
 
-        push @images, $page->local_path;
+        my ($ext) = $page->local_path =~ /(\w+)$/;        
+        $ext = lc $ext;
+        $ext = 'jpeg' if $ext eq 'jpg';
+        my $method = 'image_' . $ext; 
+        if ($pdf->can($method)) {
+            my $image = $pdf->$method($page->local_path);
+            $pdf->page($image->width, $image->height);
+            $pdf->image($image, 0, 0);
+        }
     }
 
-    $pdf->load_images(@images); 
+    my $pdf_content = $pdf->saveas('-');
+    #my $fh = new IO::Scalar \$pdf_content;
 
-    my $pdf_content;
-    
-    my $fh = new IO::Scalar \$pdf_content;
-    $pdf->write_file($fh);
 
     my $filename = $period->book->name . $period->name;
     $filename = encode('UTF-8', $filename);
