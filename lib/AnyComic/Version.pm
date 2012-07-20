@@ -6,7 +6,7 @@ package AnyComic::Version;
 
 use Exporter 'import';
 
-our $VERSION = "0.1.2";
+our $VERSION = "0.1.5";
 
 our @EXPORT = qw/install_modules check_module_update check_database_update update_module_version/;
 
