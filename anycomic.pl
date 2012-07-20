@@ -4,6 +4,8 @@ require 5.12.0;
 use lib 'lib';
 use AnyComic::Version;
 
+binmode(STDOUT, ':locale');
+
 sub setup {
     use File::Copy;
 
@@ -32,9 +34,25 @@ sub start {
     system("morbo script/anycomic -l $listen");
 }
 
-if ( ! -f 'database/anycomic.db' or ($ARGV[0] && $ARGV[0] eq 'setup') ) {
+eval {
+    require Mojolicious;
+};
+
+my $module_installed = $@ ? 0 : 1;
+
+if ( ! -f 'database/anycomic.db' or ($ARGV[0] && $ARGV[0] eq 'setup') or ! $module_installed) {
     setup;
     
+    eval {
+        require Mojolicious;
+    };
+
+    if ($@) {
+        print "安装过程需要系统重启，重启后重新运行本程序\n";
+        <>;
+        exit;
+    }
+
     print "\n\nStart...\n";
 }
 
