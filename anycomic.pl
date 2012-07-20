@@ -48,7 +48,7 @@ if ( ! -f 'database/anycomic.db' or ($ARGV[0] && $ARGV[0] eq 'setup') or ! $modu
     };
 
     if ($@) {
-        print "安装过程需要系统重启，重启后重新运行本程序\n";
+        print "Please restart your computer, then run this file again.\n";
         <>;
         exit;
     }
