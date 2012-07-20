@@ -4,8 +4,6 @@ require 5.12.0;
 use lib 'lib';
 use AnyComic::Version;
 
-binmode(STDOUT, ':locale');
-
 sub setup {
     use File::Copy;
 
