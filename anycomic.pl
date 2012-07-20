@@ -3,11 +3,22 @@ require 5.12.0;
 
 use lib 'lib';
 use AnyComic::Version;
+use AnyComic::Locale;
+use utf8;
+
+my $locale_encoding = $AnyComic::Locale::ENCODING_CONSOLE_OUT;
+binmode(STDOUT, ":encoding($locale_encoding)");
 
 sub setup {
     use File::Copy;
+    
+    if ($^O ~~ /Win32/i && system('perl -v > NUL 2>&1') == 0) {
+        print "请重启电脑后，重新运行该程序，按任意键退出\n";
+        <>;
+        exit;
+    }
 
-    print "Install...\n";
+    print "开始安装...\n";
 
     # 1. Install dependencies
     my @modules = qw/Mojolicious MojoX::Renderer::Xslate Modern::Perl DBIx::Class Encode::Locale/;
@@ -28,7 +39,9 @@ sub setup {
 sub start {
     # 监听地址
     $listen = "http://*:3000";
-
+    print '-' x 80, "\n"; 
+    print ' ' x 8, "服务启动成功后，请使用浏览器访问 http://127.0.0.1:3000 \n";
+    print '-' x 80, "\n"; 
     system("morbo script/anycomic -l $listen");
 }
 
@@ -46,12 +59,12 @@ if ( ! -f 'database/anycomic.db' or ($ARGV[0] && $ARGV[0] eq 'setup') or ! $modu
     };
 
     if ($@) {
-        print "Please restart your computer, then run this file again.\n";
+        print "请重启电脑后，重新运行该程序，按任意键退出\n";
         <>;
         exit;
     }
 
-    print "\n\nStart...\n";
+    print "\n\n启动服务...\n";
 }
 
 check_module_update;
