@@ -12,7 +12,7 @@ binmode(STDOUT, ":encoding($locale_encoding)");
 sub setup {
     use File::Copy;
     
-    if ($^O ~~ /Win32/i && system('perl -v > NUL 2>&1') == 0) {
+    if ($^O ~~ /Win32/i && system('perl -v > NUL 2>&1') != 0) {
         print "请重启电脑后，重新运行该程序，按任意键退出\n";
         <>;
         exit;
