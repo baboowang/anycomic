@@ -39,9 +39,9 @@ sub setup {
 sub start {
     # 监听地址
     $listen = "http://*:3000";
-    print '-' x 80, "\n"; 
+    print '-' x 79, "\n"; 
     print ' ' x 8, "服务启动成功后，请使用浏览器访问 http://127.0.0.1:3000 \n";
-    print '-' x 80, "\n"; 
+    print '-' x 79, "\n"; 
     system("morbo script/anycomic -l $listen");
 }
 
