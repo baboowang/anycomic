@@ -97,14 +97,14 @@ sub save {
 sub _on_save { 1 }
 sub _on_load { 1 }
 
-sub _request_url_direct {
-    my ($self, $url, $headers) = @_;
-
-    return $self->_request_url($url, $headers, 1); 
-}
-
 sub _request_url {
-    my ($self, $url, $headers, $nocache) = @_;
+    my ($self, $url, %opts) = @_;
+
+    my $headers = $opts{headers};
+    my $nocache = $opts{nocache};
+    my $ua = $self->ua;
+    my $cb = $opts{cb};
+    my $delay = $opts{delay};
 
     return unless $url;
 
@@ -130,49 +130,79 @@ sub _request_url {
             $res->headers->content_type("text/html;charset=utf8");
         }
         $res->body($content);
+
+        return $cb->($res) if $cb;
+
         return $res;
+    }
+
+    my $ua_cb = sub {
+        my ($ua, $tx) = @_;
+        
+        $self->log->debug("回调：$url");
+
+        unless ($tx->success) {
+            $self->log->error("下载页面失败：$url");
+            $delay->end if $delay;
+            return;
+        }
+         
+        my $res = $tx->res;
+        my $content = $res->body;
+
+        unless ($content) {
+            $self->log->error("页面无内容：$url");
+            $delay->end if $delay;
+            return;
+        }
+
+        if ($res->content->charset) {
+            my $charset = $res->content->charset;
+            $charset = 'gbk' if $charset ~~ /gb2312/i;
+            $content = decode $charset, $content;    
+        } elsif (not $is_img) {
+            my ($charset) = $content =~ /<meta[^>]+charset=([\w-]+)/i;  
+            $charset = 'gbk' if $charset ~~ /gb2312/i;
+            $charset ||= 'UTF-8';
+            #$res->headers->add('Content-Type', "text/html;charset=$charset");
+            $content = decode $charset, $content;
+        }
+
+        # 图片本身会保存在download目录，就不缓存了
+        unless ($is_img) {
+            $content = encode 'UTF-8', $content;
+            open my $fh, '>', $cache_file;
+            print $fh $content;
+            close $fh;
+
+            $res->headers->content_type("text/html;charset=utf8");
+            $res->body($content);
+        }
+
+        if ($cb) {
+            $cb->($res);
+            $delay->end if $delay;
+            return;
+        }
+
+        return $res;
+    };
+
+    if ($cb) {
+        $self->log->debug("异步下载页面：$url");
+
+        $delay->begin if $delay;
+
+        $ua->get($url, $headers, $ua_cb);
+
+        return;
     }
 
     $self->log->debug("下载页面：$url");
 
-    my $tx = $self->ua->get($url, $headers);
-    unless ($tx->success) {
-        $self->log->error("下载页面失败：$url");
-        return;
-    }
-     
-    my $res = $tx->res;
-    my $content = $res->body;
+    my $tx = $ua->get($url, $headers);
 
-    unless ($content) {
-        $self->log->error("页面无内容：$url");
-        return;
-    }
-
-    if ($res->content->charset) {
-        my $charset = $res->content->charset;
-        $charset = 'gbk' if $charset ~~ /gb2312/i;
-        $content = decode $charset, $content;    
-    } elsif (not $is_img) {
-        my ($charset) = $content =~ /<meta[^>]+charset=([\w-]+)/i;  
-        $charset = 'gbk' if $charset ~~ /gb2312/i;
-        $charset ||= 'UTF-8';
-        #$res->headers->add('Content-Type', "text/html;charset=$charset");
-        $content = decode $charset, $content;
-    }
-
-    # 图片本身会保存在download目录，就不缓存了
-    unless ($is_img) {
-        $content = encode 'UTF-8', $content;
-        open my $fh, '>', $cache_file;
-        print $fh $content;
-        close $fh;
-
-        $res->headers->content_type("text/html;charset=utf8");
-        $res->body($content);
-    }
-
-    return $res;
+    return $ua_cb->($ua, $tx);
 }
 
 sub _filter {

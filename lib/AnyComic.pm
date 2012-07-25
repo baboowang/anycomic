@@ -3,6 +3,7 @@ use Mojo::Base -base;
 use Mojo::URL;
 use AnyComic::Site;
 use Mojo::Log;
+use Compress::Zlib;
 use Carp qw/carp croak/;
 use Scalar::Util 'weaken';
 use File::Spec::Functions 'catdir';

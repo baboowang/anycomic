@@ -38,6 +38,7 @@ sub cover {
         $res->{book}->cover &&
         $res->{book}->cover->download;
     
+    #$self->render_static('/img/default.jpg');
     $self->render_static($res->{book}->cover->static_path);
 }
 1;

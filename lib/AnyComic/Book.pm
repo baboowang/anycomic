@@ -95,7 +95,7 @@ sub parse {
 
     my $resp;
     if ($nocache) {
-        $resp = $self->_request_url_direct($url);
+        $resp = $self->_request_url($url, nocache => 1);
     } else {
         $resp = $self->_request_url($url);
     }

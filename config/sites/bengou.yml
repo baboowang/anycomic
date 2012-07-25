@@ -4,12 +4,12 @@ domain : bengou.com
 search : 
     rule : 'http://www.bengou.com/Result?searchstr={keyword}&searchtype=name'
     keyword : |
-              use Encode qw(encode FB_PERLQQ);
+              use Encode qw(FB_PERLQQ);
               my $string = $_;
               $string =~ s{([\x00-\x29\x2C\x3A-\x40\x5B-\x5E\x60\x7B-\x7F])}
                             {'%' . uc(unpack('H2', $1))}eg;
-              return encode('ascii', $string, sub { sprintf '%%u%04X', $_[0] });
-    items : 'div.endcomicscontent > ul > li'
+              return Encode::encode('ascii', $string, sub { sprintf '%%u%04X', $_[0] });
+    items : 'div.endcomicscontent:eq(0) > ul > li'
     props :
         name : 'h1 a:first-child'
         cover : 'div.recommendedpic img'

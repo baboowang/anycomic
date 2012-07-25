@@ -31,7 +31,7 @@ sub _download {
     return 1 if -f $local_path && $self->_set_downloaded($local_path);
 
     my $headers = { Referer => $refer_url }; 
-    my $resp = $self->_request_url($url, $headers); 
+    my $resp = $self->_request_url($url, headers => $headers); 
 
     unless ($resp) {
         $self->log->error(qq{下载图片失败：$url_name. $url});

@@ -69,10 +69,15 @@
 : if $check_refresh {
 <script>
 $(function(){
+    popup_msg('确认更新中...', 'info');
     $.get('<: $c.url_for("/book/refresh.json").query(url => $book.url) :>', function(ret) {
         if (ret && ret.code == 0) {
+            popup_msg('漫画已更新', 'succ');
             location.reload();
+            return;
         }
+
+        hide_popup_msg();
     }, 'json');
 });
 </script>

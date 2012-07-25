@@ -37,7 +37,7 @@ sub download {
     return 1 if -f $local_path && $self->_set_downloaded($local_path) && $self->save();
 
     my $headers = { referer => $self->period->url }; 
-    my $resp = $self->_request_url($url, $headers); 
+    my $resp = $self->_request_url($url, headers => $headers); 
 
     unless ($resp) {
         $self->log->error(qq{下载失败：$url_name});
@@ -71,7 +71,7 @@ sub download {
         return 1 if -f $local_path and $self->_set_downloaded($local_path);
 
         $headers->{referer} = $url;
-        $resp = $self->_request_url($resource_url, $headers);
+        $resp = $self->_request_url($resource_url, headers => $headers);
         unless ($resp) {
             $self->log->error(qq{下载失败：$url_name});
             return;

@@ -44,6 +44,13 @@ sub _on_save {
 
     $data->{image_id} = $image->{id};
     $data->{book_id} = $self->book->id;
+    
+    my @other_cover = $self->get_schema->resultset('Cover')
+        ->search({
+            book_id => $self->book->id,
+            image_id => { '!=' => $image->{id} },
+        });
+    $_->delete for @other_cover;
 
     return 1;
 }

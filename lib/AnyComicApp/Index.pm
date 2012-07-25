@@ -1,6 +1,10 @@
 package AnyComicApp::Index;
 use Mojo::Base 'AnyComicApp::Controller';
 use AnyComic::Version;
+use Mojo::UserAgent;
+use Compress::Zlib;
+use Mojo::IOLoop;
+use Mojo::IOLoop::Delay;
 use List::Util qw/shuffle/;
 
 sub index {
@@ -47,22 +51,42 @@ sub index {
         my $book = $anycomic->get_book($row->book->url);
         push @$books, $book if $book;
     }
+    
+    my $delay;
 
     if ($kw and (@$books == 0 or (@$books < $page_size and $search_outside))) {
-        my @sites = shuffle @{$anycomic->{sites}}; 
+        $self->render_later;
 
-        SITE_LOOP : for my $site (@sites) {
-            my $result = $site->search($kw);
-            next unless $result;
+        $delay = Mojo::IOLoop->delay(sub{
+            if (@$books > $page_size) {
+                $data->{books} = [@{$books}[0..$page_size - 1]];
+            }
+            $self->stash($data);
 
+            $self->render($self->is_ajax ? 'component/shelf' : 'index');
+        });
+
+        my $cb = sub {
+            my $result = shift;
+             
+            return unless ref $result eq 'ARRAY';
+    
             for my $book (@$result) {
                 next if $self->in_shelf($book); 
                 push @$books, $book;
-                last SITE_LOOP if @$books >= $page_size;
             }
+        };
+        
+        my @sites = shuffle @{$anycomic->{sites}}; 
+
+        for my $site (@sites) {
+            $site->search($kw, cb => $cb, delay => $delay);
         }
 
         $data->{show_search_outside} = 0;
+        
+        $delay->wait unless $delay->ioloop->is_running;
+
     }
 
     unless (exists $data->{show_search_outside}) {
@@ -74,6 +98,9 @@ sub index {
     $data->{shelf_mid_x} = int($data->{shelf_x_size} / 2);
     $data->{custom_css} = $self->get_custom_shelf_style;
     $data->{app_version} = $AnyComic::Version::VERSION;
+
+    return if $delay && $delay->{counter};
+
     $self->stash($data);
 
     $self->render($self->is_ajax ? 'component/shelf' : 'index');
