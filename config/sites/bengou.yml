@@ -2,46 +2,54 @@ name : 笨狗
 version : 20120613
 domain : bengou.com
 search : 
-    rule : 'http://www.bengou.com/Result?searchstr={keyword}&searchtype=name'
-    keyword : |
-              use Encode qw(FB_PERLQQ);
-              my $string = $_;
-              $string =~ s{([\x00-\x29\x2C\x3A-\x40\x5B-\x5E\x60\x7B-\x7F])}
-                            {'%' . uc(unpack('H2', $1))}eg;
-              return Encode::encode('ascii', $string, sub { sprintf '%%u%04X', $_[0] });
-    items : 'div.endcomicscontent:eq(0) > ul > li'
+    rule : 'http://www.bengou.com/Result?searchstr={keyword}'
+    items : 'div.search-list > ul > li'
     props :
-        name : 'h1 a:first-child'
-        cover : 'div.recommendedpic img'
-        url : 'h1 a:first-child'
-        last_update_period : 'h1 a:last-child'
-        author : 'p:first-of-type a:first-child'
-book :
-    periods : '#mhlist li a:first-of-type'
-    name : 'div.insideright h1'
-    rule : '\d+/\w+/index\.html'
-    props :
-        cover : 'div.section div.recommendedpic img'
+        name : 'p.tit a strong'
+        cover : 'img:eq(0)'
+        url : 'a:eq(0)'
+        last_update_period : 'p.tit a span'
         author : 
-            - selector : 'div.sectioninfo > p:contains(作.*者) a'
-        status : 
-            - selector : 'div.sectioninfo > p:contains(状态) a'
-        cates : 
-            - selector : 'div.sectioninfo > p:contains(类型) a'
-        area : 
-            - selector : 'div.sectioninfo > p:contains(区域) a'
-        update_time : 
-            - selector : 'div.sectioninfo > p:contains(更新时间) span'
+            - selector : 'p:contains(作者)'
+            - regexp : '作者：([^<>\s]+)'
+book :
+    periods : 'div.section-list:not(#chapter_list1) a[href$="html"]'
+    name : 'div.title h1'
+    rule : '\d+/\w+/?$'
+    props :
+        cover : 'div.cartoon-intro img:eq(0)'
+        author : 
+            - selector : 'div.cartoon-intro p:contains(作者)'
             - processor : text
-            - script : |
-                my ($year, $month, $day) = $_ =~ /(\d+)年(\d+)月(\d+)日/; 
-                return "20$year-$month-$day";
-        intro : 'div.sectionabout > p:first-of-type'    
+            - regexp : '作者：\s*([^<>\s]+)'
+        status : 
+            - selector : 'div.cartoon-intro p:contains(状态)'
+            - processor : text
+            - regexp : '状态：\s*([^<>\s]+)'
+        cates : 
+            - selector : 'div.cartoon-intro p:contains(类型)'
+            - processor : text
+            - regexp : '类型：\s*([^<>\s]+)'
+        area : 
+            - selector : 'div.cartoon-intro p:contains(区域)'
+            - processor : text
+            - regexp : '区域：\s*([^<>\s]+)'
+        update_time : 
+            - selector : 'div.cartoon-intro p:contains(更新时间)'
+            - processor : text
+            - regexp : '(\d{4}-\d{2}-\d{2})'
+        intro :
+            - selector : 'div.cartoon-intro #cartoon_digest2'    
+            - processor : text
+            - regexp : '简介：\s*([^<>]+)'
 period :
     pages :
-        - 'script:not([src]):eq(1)'
-        - { script : '$_->text =~ m/(\d+\.html)/g' }
+        - selector : 'script:not([src]):contains(chapterTree)'
+        - processor : text
+        - script : |
+                   my ($pic_base) = $_ =~ m{pic_base\s*=\s*'([^']+)'};
+                   my ($pic_tree) = $_ =~ m{picTree\s*=\s*\[(.+?)\]};
+                   my @pics = $pic_tree =~ m{(\d+\.\w+)}g;
+                   return map { $pic_base . $_ } @pics;
     rule : '\d+/\w+/\d+/\d+\.html' 
-    book : 's{\d+/\d+(?=.html)}{index}'
-page :
-    img : '#disp'
+    book : 's{\d+/\d+\.html}{}'

@@ -37,12 +37,12 @@ period :
     rule : '/comic/(?<book_id>\d+)/list_(?<period_id>\d+).html'
     book : 's{list_\d+\.html}{}'
     pages : 
-        - selector : 'script:not([src]):eq(1)'
+        - selector : 'script:not([src]):contains(cInfo)'
         - processor : text
-        - regexp : '(.+?);imanhua\.core\.bind'
+        - regexp : 'var\s+imh\s*=\s*imh\s*\|\|\s*\{\};(.+)$'
         - processor : 'unpack'
         - regexp : '=\s*(\{.+?\}(?=;))' 
         - processor : 
             - json
-            - key images
+            - key files
             - tpl http://t4.mangafiles.com/Files/Images/{book_id}/{period_id}/{_}

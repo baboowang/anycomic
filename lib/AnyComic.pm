@@ -164,8 +164,11 @@ sub load_config {
     my @files = ();
 
     if (-d $path) {
-        $path .= '/' unless $path ~~ qr{/$};        
-        @files = glob("${path}*.yml");
+        eval {
+            opendir my $dh, $path or die;
+            @files = map { catdir($path, $_) } grep /.+\.yml$/, readdir $dh;
+            closedir $dh;
+        };
     } elsif (-f $path) {
         push @files, $path;
     }
